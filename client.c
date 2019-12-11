@@ -14,8 +14,27 @@ int main(int c,char* v[] ) {
     // Demande d’une connexion au service 
     CHECK(connect(sa, (struct sockaddr *)&svc, sizeof(svc)) , "Can't connect");
     // Dialogue avec le serveur
-    connected(sd,svc);
+    com(sd,svc);
 }
+
+void com(int sd,struct sockaddr_in svc){
+    struct sockaddr add;
+    int port;
+    char reponse[MAX_BUFF];
+    while(1){
+        if(read(sd,reponse,sizeof(reponse))==1){
+         serverMode(sd,svc);
+     }
+        if(read(sd,reponse,sizeof(reponse))==2){
+             write(sd,3,1);
+             add = read(sd,reponse,sizeof(reponse));
+             write(sd,4,1);
+             port = read(sd,reponse,sizeof(reponse));
+             clientMode(sd,svc,add);
+     }
+    }
+}
+
 void clientMode(int sd,struct sockaddr_in svc,struct sockaddr_in addr,int port){
     char reponse[MAX_BUFF];
     //debut de la partie

@@ -25,10 +25,10 @@ int main() {
                 clt2Len = sizeof(clt2);
                 printf("En attente player 1\n");
                 CHECK(sd=accept(se, (struct sockaddr *)&clt, &cltLen) , "Can't connect");
+ 
                 printf("waiting for player 2\n");
                 CHECK(sd2=accept(se, (struct sockaddr *)&clt2, &clt2Len) , "Can't connect");
                 printf("players ready");
-                com (sd, clt, sd2, clt2);
                 close(sd);
                 close(sd2);
 
@@ -39,4 +39,14 @@ int main() {
 void com(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2) {
         char reponse[MAX_BUFF];
         printf("c'est parti!!!\n");
+        CHECK(write(sd,1,1),"can't write"); //notifie au joueur 1 qu'il est en mode serveur
+        CHECK(write(sd2,2,15),"can't write");
+        while(read(sd2,reponse,sizeof(reponse))!=3){ //ack
+                sleep(1);
+        }
+        write(sd2,clt2.sin_addr.s_addr,10);
+        while(read(sd2,reponse,sizeof(reponse))!=4){ //ack
+                sleep(1);
+        }
+        write(sd2,clt2.sin_addr.s_addr,10);
 }
