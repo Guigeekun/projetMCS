@@ -41,11 +41,11 @@ void com(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2) {
         printf("c'est parti!!!\n");
         CHECK(write(sd,1,1),"can't write"); //notifie au joueur 1 qu'il est en mode serveur
         CHECK(write(sd2,2,15),"can't write");
-        while(read(sd2,reponse,sizeof(reponse))!=3){ //ack
+        while(read(sd2,reponse,sizeof(reponse))!=1){ //ack
                 sleep(1);
         }
         write(sd2,clt2.sin_addr.s_addr,10);
-        while(read(sd2,reponse,sizeof(reponse))!=4){ //ack
+        while(read(sd2,reponse,sizeof(reponse))!=1){ //ack
                 sleep(1);
         }
         write(sd2,clt2.sin_addr.s_addr,10);
