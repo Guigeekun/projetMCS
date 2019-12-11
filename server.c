@@ -13,23 +13,21 @@ int main() {
         svc.sin_port   = htons (PORT_SVC);
         svc.sin_addr.s_addr = INADDR_ANY; 
         memset(&svc.sin_zero, 0, 8); 
-
+        printf("Fin initiatlisation \n ");
         // Association de l’adressage préparé avec la socket d’écoute
-        CHECK(bind(se, (struct sockaddr *) &svc, sizeof(svc)) , "Can't bind");
-
+        CHECK(bind(se, (struct sockaddr *) &svc, sizeof(svc)) , "Can't bind")
         // Mise en écoute de la socket 
         CHECK(listen(se, 5) , "Can't calibrate");
-
         // Boucle permanente de service 
         while (1) {
                 //  Attente d’un appel
                 cltLen = sizeof(clt);
                 clt2Len = sizeof(clt2);
-                printf("waiting for player 1");
+                printf("En attente player 1\n");
                 CHECK(sd=accept(se, (struct sockaddr *)&clt, &cltLen) , "Can't connect");
-                printf("waiting for player 2");
+                printf("waiting for player 2\n");
                 CHECK(sd2=accept(se, (struct sockaddr *)&clt2, &clt2Len) , "Can't connect");
-                printf("players ready");
+                printf("players ready\n");
                 pid = fork();
                 if(pid==0){
                         // Dialogue avec le client
@@ -43,4 +41,5 @@ int main() {
 }
 void partie(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2) {
         char reponse[MAX_BUFF];
+        printf("c'est parti!!!\n");
 }
