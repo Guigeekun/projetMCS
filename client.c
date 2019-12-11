@@ -25,9 +25,18 @@ void connected(int sd,struct sockaddr_in svc){
 
 }
 
-int printBoard(char board[100][7]){ // 7 colonne et on bloque la limite du jeu à 100 ligne (à gérer plus tard)
+int printBoard(char board[99][6]){ // 7 colonne et on bloque la limite du jeu à 100 ligne (à gérer plus tard)
     //la variable board contient uniquement les jetons alors que boardAff contient aussi les element graphique du plateau
     //ici on doit creer le plateau à afficher à partir du tableau board ne contenant que les jetons
-    char boardAff[101][15];
+    char boardAff[100][14];
+    char boardAff[0]={"-","-","-","-","-","-","-"};
+    for (size_t i = 0; i < 99; i++)
+    {
+        if(board[i]==NULL){
+            
+        }
+    }
+    
+
 
 }
