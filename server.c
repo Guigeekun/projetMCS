@@ -27,19 +27,16 @@ int main() {
                 CHECK(sd=accept(se, (struct sockaddr *)&clt, &cltLen) , "Can't connect");
                 printf("waiting for player 2\n");
                 CHECK(sd2=accept(se, (struct sockaddr *)&clt2, &clt2Len) , "Can't connect");
-                printf("players ready\n");
-                pid = fork();
-                if(pid==0){
-                        // Dialogue avec le client
-                        partie (sd, clt, sd2, clt2);
-        }
-        close(sd);
+                printf("players ready");
+                com (sd, clt, sd2, clt2);
+                close(sd);
+                close(sd2);
 
-    }
-    shutdown(se,2);
-    return 0;
+        }
+        shutdown(se,2);
+        return 0;
 }
-void partie(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2) {
+void com(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2) {
         char reponse[MAX_BUFF];
         printf("c'est parti!!!\n");
 }

@@ -16,7 +16,13 @@ int main(int c,char* v[] ) {
     // Dialogue avec le serveur
     connected(sd,svc);
 }
-void connected(int sd,struct sockaddr_in svc){
+void clientMode(int sd,struct sockaddr_in svc,struct sockaddr_in addr,int port){
+    char reponse[MAX_BUFF];
+    //debut de la partie
+
+}
+
+void serverMode(int sd,struct sockaddr_in svc){
     char reponse[MAX_BUFF];
     while(read(sd, reponse, sizeof(reponse))!=1){
         printf("waiting for player 2");
@@ -29,11 +35,11 @@ int printBoard(char board[99][6]){ // 7 colonne et on bloque la limite du jeu à
     //la variable board contient uniquement les jetons alors que boardAff contient aussi les element graphique du plateau
     //ici on doit creer le plateau à afficher à partir du tableau board ne contenant que les jetons
     char boardAff[100][14];
-    char boardAff[0]={"-","-","-","-","-","-","-"};
+    char boardAff[0]={"-","-","-","-","-","-","-","-","-","-","-","-","-","-","-"};
     for (size_t i = 0; i < 99; i++)
     {
         if(board[i]==NULL){
-            
+
         }
     }
     
