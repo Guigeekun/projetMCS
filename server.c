@@ -1,11 +1,10 @@
 #include  "shared.h"
 
-
 int main() {
-        int se ,sd;
+        int se ,sd,sd2;
         pid_t pid;
-        struct sockaddr_in svc,clt;
-        socklen_t cltLen;
+        struct sockaddr_in svc,clt,clt2;
+        socklen_t cltLen,clt2Len;
  // Création de la socket de réception d’écoute des appels 
         CHECK(se=socket(PF_INET, SOCK_STREAM, 0), "Can't create");
 
@@ -25,11 +24,16 @@ int main() {
         while (1) {
                 //  Attente d’un appel
                 cltLen = sizeof(clt);
+                clt2Len = sizeof(clt2);
+                printf("waiting for player 1");
                 CHECK(sd=accept(se, (struct sockaddr *)&clt, &cltLen) , "Can't connect");
+                printf("waiting for player 2");
+                CHECK(sd2=accept(se, (struct sockaddr *)&clt2, &clt2Len) , "Can't connect");
+                printf("players ready");
                 pid = fork();
                 if(pid==0){
                         // Dialogue avec le client
-                        partie (sd , clt);
+                        partie (sd, clt, sd2, clt2);
         }
         close(sd);
 
@@ -37,6 +41,6 @@ int main() {
     shutdown(se,2);
     return 0;
 }
-void partie(int sd, struct sockaddr_in clt) {
+void partie(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2) {
         char reponse[MAX_BUFF];
 }

@@ -18,5 +18,16 @@ int main(int c,char* v[] ) {
 }
 void connected(int sd,struct sockaddr_in svc){
     char reponse[MAX_BUFF];
+    while(CHECK(read(sd, reponse, sizeof(reponse)), "Can't send")!=1){
+        printf("waiting for player 2");
+    }
+    //debut de la partie
+
+}
+
+int printBoard(char[7][100] board){ // 7 colonne et on bloque la limite du jeu à 100 ligne (à gérer plus tard)
+    //la variable board contient uniquement les jetons alors que boardAff contient aussi les element graphique du plateau
+    //ici on doit creer le plateau à partir du tableau board ne contenant que les jetons
+    char[15][100] boardAff;
 
 }

@@ -14,4 +14,4 @@
 #define INADDR_SVC "127.0.0.1"
 
 #define MAX_BUFF 1024
-char buffer[MAX_BUFF]; 
+char buffer[MAX_BUFF];
