@@ -25,7 +25,7 @@ void com(int sd,struct sockaddr_in svc){
         if(read(sd,reponse,sizeof(reponse))==1){
          serverMode(sd,svc);
      }
-        if(read(sd,reponse,sizeof(reponse))==2){
+        if(read(sd,reponse,sizeof(reponse))==1){
              write(sd,3,1);
              add = read(sd,reponse,sizeof(reponse));
              write(sd,4,1);
