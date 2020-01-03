@@ -28,7 +28,8 @@ int main() {
  
                 printf("waiting for player 2\n");
                 CHECK(sd2=accept(se, (struct sockaddr *)&clt2, &clt2Len) , "Can't connect");
-                printf("players ready");
+                printf("players ready\n");
+                com(sd,clt,sd2,clt2);
                 close(sd);
                 close(sd2);
 
@@ -38,15 +39,14 @@ int main() {
 }
 void com(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2) {
         char reponse[MAX_BUFF];
-        printf("c'est parti!!!\n");
-        CHECK(write(sd,1,1),"can't write"); //notifie au joueur 1 qu'il est en mode serveur
-        CHECK(write(sd2,2,15),"can't write");
+        printf("debut communication\n");
+        CHECK(write(sd,1,sizeof(1)),"can't write"); //notifie au joueur 1 qu'il est en mode serveur (1)
+        CHECK(write(sd2,2,sizeof(15)),"can't write"); //notifie au joueur 2 qu'il est en mode client (2)
         while(read(sd2,reponse,sizeof(reponse))!=1){ //ack
                 sleep(1);
         }
-        write(sd2,clt2.sin_addr.s_addr,10);
-        while(read(sd2,reponse,sizeof(reponse))!=1){ //ack
+        write(sd2,clt2.sin_addr.s_addr,10); //envoie de l'addr du serv au client
+        while(read(sd2,reponse,sizeof(reponse))!=2){ //ack
                 sleep(1);
         }
-        write(sd2,clt2.sin_addr.s_addr,10);
 }
