@@ -27,7 +27,7 @@ for(i=0;i<col1;i++) //à modifier pour mettre le tab dans le bon sens
 
 for(j=0;j<COL;j++)
 	{
-		t[LIG][j]='_';
+		t[0][j]='_';
 	}
 
 
@@ -37,21 +37,19 @@ for(j=0;j<LIG;j=j+2)
 	{
 		j1=j/2;
 		t[i][j]='|';
-		t[i][j+1]=' '; //
+		t[i][j+1]=(char*) board[j1,i]; //need to fix that asap
 	}
 }
 
 
 
-for(i=0;i<LIG-1;i++) //à modifier pour mettre le tab dans le bon sens 
+for(i=0;i<COL;i++) //à modifier pour mettre le tab dans le bon sens 
 {
-	for(j=0;j<COL;j++)
+	for(j=0;j<LIG;j++)
 	{
 		printf("%c",t[i][j]);
 	}
-	
 	printf("\n");
-	
 }
 
 }
