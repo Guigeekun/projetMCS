@@ -13,5 +13,8 @@
 #define PORT_SVC 7000
 #define INADDR_SVC "127.0.0.1"
 
+#define OK 1 
+#define OK2 2
+
 #define MAX_BUFF 2048
 char buffer[MAX_BUFF];

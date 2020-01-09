@@ -19,22 +19,28 @@ int main(int c,char* v[] ) {
 
 void com(int sd,struct sockaddr_in svc){
     char addr[15];
-    int port;
+    int* ack=OK;
+    int* ack2=OK2;
     char reponse[MAX_BUFF];
     printf("attente du mode\n");
+
     while(1){
-        if(read(sd,reponse,sizeof(reponse))=='1'){ //le serveur a notifier (1) donc mode serveur
+        read(sd,reponse,sizeof(reponse));
+        printf("%d",atoi(reponse));
+        if(atoi(reponse) == ack){ //le serveur a notifier (1) donc mode serveur
         printf("mode serv\n");
-         serverMode(sd,svc);
+        serverMode(sd,svc);
+        close(sd);
      }
-        if(read(sd,reponse,sizeof(reponse))=='2'){ //le serveur a notifier (2) donc mode serveur
+        if(atoi(reponse) == ack2){ //le serveur a notifier (2) donc mode serveur
         printf("mode client\n");
-             write(sd,1,sizeof(1));
+             write(sd,&ack,sizeof(ack)+1);
              read(sd,reponse,sizeof(reponse)); //reception de l'adresse
              strcpy(addr,reponse);
-             write(sd,2,sizeof(2));           // le ack est à 2 pour eviter qu'il soit confondu avec le premier
-             close(sd);
+             write(sd,&ack2,sizeof(ack2)+1);   // le ack est à 2 pour eviter qu'il soit confondu avec le premier
              clientMode(addr);
+             close(sd);
+             
      }
     }
 }
@@ -42,6 +48,7 @@ void com(int sd,struct sockaddr_in svc){
 void clientMode(char addr){ // le port est fixé à PORT_SVC
     char reponse[MAX_BUFF];
     int sh;
+    char* ack=OK;
     struct sockaddr_in svc;
     printf("communication coté client\n");
     CHECK(sh=socket(PF_INET, SOCK_STREAM  , 0), "Can't create");
@@ -54,7 +61,7 @@ void clientMode(char addr){ // le port est fixé à PORT_SVC
     // Demande d’une connexion au service 
     CHECK(connect(sh, (struct sockaddr *)&svc, sizeof(svc)) , "Can't connect");
     printf("conection réussi\n");
-    write(sh,1,sizeof(1));
+    write(sh,&ack,sizeof(ack));
 
 }
 
@@ -68,8 +75,8 @@ void serverMode(int sd,struct sockaddr_in svc){
 
 }
 
-int printBoard(){ // fonction en cours de construction dans tableau.c
-    //   7 colonne et on bloque la limite du jeu à 100 ligne (à gérer plus tard)
+int createBoard(){ // fonction en cours de construction dans tableau.c
+    //   7 colonne et on bloque la limite du jeu à x ligne (à gérer plus tard)
     //la variable board contient uniquement les jetons alors que boardAff contient aussi les element graphique du plateau
     //ici on doit creer le plateau à afficher à partir du tableau board ne contenant que les jetons
     

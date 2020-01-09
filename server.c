@@ -37,8 +37,8 @@ int main() {
         return 0;
 }
 void com(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2) {
-        char ack='1';
-        char ack2='2';
+        char* ack=OK;
+        char* ack2=OK2;
         char reponse[MAX_BUFF];
         
         printf("debut communication\n");
@@ -49,14 +49,19 @@ void com(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2) {
 
         printf("notif done\n");
 
-                printf("%c\n",ack);
-        printf("%c\n",ack2);
+        printf("%s\n",ack);
+        printf("%s\n",ack2);
 
-        while(read(sd2,reponse,sizeof(reponse))!=1){ //ack
+        read(sd2,reponse,sizeof(reponse));
+        while(atoi(reponse)!=ack){ //attente d'ack du client
+                read(sd2,reponse,sizeof(reponse));
                 sleep(1);
         }
+
         write(sd2,clt2.sin_addr.s_addr,sizeof(clt2.sin_addr.s_addr)); //envoie de l'addr du serv au client
-        while(read(sd2,reponse,sizeof(reponse))!=2){ //ack
+        read(sd2,reponse,sizeof(reponse));
+        while(atoi(reponse)!=ack2){ //ack
+                read(sd2,reponse,sizeof(reponse));
                 sleep(1);
         }
 }
