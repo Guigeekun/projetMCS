@@ -69,10 +69,23 @@ void placementJeton(choixL,choixC)
 int main()
 {
 creationTableau();
-printf("Veuillez entrer le numéro de ligne sur le jeton:\n");
-scanf("%d",&choixL);
-printf ("Veuillez entrer le numéro de colonne pour le jeton \n");
-scanf("%d",&choixC);
+
+	printf("Veuillez entrer le numéro de ligne sur le jeton:\n");
+	scanf("%d",&choixL);
+while(choixL==0)
+{
+	printf("Il faut entrer un nombre supérieur à 0!!\n");
+	printf("Veuillez entrer le numéro de ligne sur le jeton:\n");
+	scanf("%d",&choixL);
+}
+	printf ("Veuillez entrer le numéro de colonne pour le jeton \n");
+	scanf("%d",&choixC);
+while(choixC==0)
+{
+	printf("Il faut entrer un nombre supérieur à 0!!\n");
+	printf("Veuillez entrer le numéro de colonne sur le jeton:\n");
+	scanf("%d",&choixC);
+}	
 printf("Vous voulez mettre votre jeton dans la ligne %d et dans  la colonne %d\n",choixL,choixC);
 
 placementJeton(choixL,choixC);
