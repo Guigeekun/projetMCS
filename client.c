@@ -19,29 +19,30 @@ int main(int c,char* v[] ) {
 
 void com(int sd,struct sockaddr_in svc){
     char addr[15];
-    int* ack=OK;
-    int* ack2=OK2;
     char reponse[MAX_BUFF];
     printf("attente du mode\n");
 
     while(1){
-        read(sd,reponse,sizeof(reponse));
-        printf("%d",atoi(reponse));
-        if(atoi(reponse) == ack){ //le serveur a notifier (1) donc mode serveur
-        printf("mode serv\n");
-        serverMode(sd,svc);
-        close(sd);
-     }
-        if(atoi(reponse) == ack2){ //le serveur a notifier (2) donc mode serveur
-        printf("mode client\n");
-             write(sd,&ack,sizeof(ack)+1);
-             read(sd,reponse,sizeof(reponse)); //reception de l'adresse
-             strcpy(addr,reponse);
-             write(sd,&ack2,sizeof(ack2)+1);   // le ack est à 2 pour eviter qu'il soit confondu avec le premier
-             clientMode(addr);
-             close(sd);
-             
-     }
+        read(sd, buffer, sizeof(reponse));
+        printf("%d\n",atoi(buffer));
+        switch (atoi(buffer)) {
+                        case 1 :serverMode(sd,svc);
+                                close(sd);break;
+
+                        case 2 :printf("mode client\n");
+                                write(sd,OK,sizeof(OK)+1);
+                                printf("envoie1\n");
+                                sleep(2); //pour eviter qu'il lise avant que le serveur ait écrit
+                                read(sd,buffer,sizeof(buffer)); 
+                                strcpy(addr,buffer);
+                                printf("reception addr\n");
+                                write(sd,OK2,sizeof(OK2)+1);   // le ack est à 2 pour eviter qu'il soit confondu avec le premier
+                                printf("envoie2\n");
+                                clientMode(addr);
+                                close(sd);break;
+
+                        default :   break;
+                            }
     }
 }
 
@@ -67,7 +68,9 @@ void clientMode(char addr){ // le port est fixé à PORT_SVC
 
 void serverMode(int sd,struct sockaddr_in svc){
     char reponse[MAX_BUFF];
-    while(read(sd, reponse, sizeof(reponse))!=1){ //attente du client
+    printf("mode serv\n");
+    while(atoi(reponse)!=1){ //attente du client
+        read(sd, reponse, sizeof(reponse));
         printf("waiting for player 2\n");
     }
     printf("Connection established - starting the game\n");

@@ -37,31 +37,32 @@ int main() {
         return 0;
 }
 void com(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2) {
-        char* ack=OK;
-        char* ack2=OK2;
         char reponse[MAX_BUFF];
         
         printf("debut communication\n");
 
-        CHECK(write(sd,&ack,sizeof(ack)+1),"can't write"); //notifie au joueur 1 qu'il est en mode serveur (1)
-        CHECK(write(sd2,&ack2,sizeof(ack2)+1),"can't write"); //notifie au joueur 2 qu'il est en mode client (2)
+        CHECK(write(sd, OK, strlen(OK)+1), "Can't write"); //notifie au joueur 1 qu'il est en mode serveur (1)
+        CHECK(write(sd2, OK2, strlen(OK2)+1), "Can't write"); //notifie au joueur 2 qu'il est en mode client (2)
 
 
         printf("notif done\n");
 
-        printf("%s\n",ack);
-        printf("%s\n",ack2);
+        printf("%s\n",OK);
+        printf("%s\n",OK2);
 
         read(sd2,reponse,sizeof(reponse));
-        while(atoi(reponse)!=ack){ //attente d'ack du client
+        while(atoi(reponse)!=1){ //attente d'ack (OK) du client
                 read(sd2,reponse,sizeof(reponse));
                 sleep(1);
         }
+        printf("reception\n");
 
         write(sd2,clt2.sin_addr.s_addr,sizeof(clt2.sin_addr.s_addr)); //envoie de l'addr du serv au client
+        printf("envoie addr\n");
         read(sd2,reponse,sizeof(reponse));
-        while(atoi(reponse)!=ack2){ //ack
+        while(atoi(reponse)!=2){ //OK2
                 read(sd2,reponse,sizeof(reponse));
                 sleep(1);
         }
+         printf("job done, peut acceuillir d'autre client\n");
 }
