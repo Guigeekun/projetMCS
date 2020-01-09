@@ -15,6 +15,7 @@
 
 #define OK 1 
 #define OK2 2
-
+#define LIG 16
+#define COL 15
 #define MAX_BUFF 2048
 char buffer[MAX_BUFF];

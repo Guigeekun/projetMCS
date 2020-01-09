@@ -7,7 +7,12 @@
 int i;
 int j;
 char tab[COL][LIG];
-int main()
+int choixL;
+int choixC;
+void creationTableau();
+
+
+void creationTableau()
 {
 
 	for(j=0;j<LIG;j=j+2)
@@ -31,4 +36,44 @@ int main()
 		printf("\n");
 		
 	}
+}
+
+void placementJeton(choixL,choixC)
+{
+//printf("Fonction placement");
+
+	for(j=0;j<LIG;j=j+2)
+	{
+
+		for(i=1;i<COL;i++)
+		{
+			tab[i][j]='|';
+			tab[choixL][choixC+1]='+';
+		}		
+		tab[COL-1][j+1]='_';	
+	}
+	
+	for(i=0;i<LIG-1;i++) 
+	{
+		for(j=0;j<COL;j++)
+		{
+			printf("%c",tab[i][j]);
+		}
+		
+		printf("\n");
+		
+	}
+
+}
+
+int main()
+{
+creationTableau();
+printf("Veuillez entrer le numéro de ligne sur le jeton:\n");
+scanf("%d",&choixL);
+printf ("Veuillez entrer le numéro de colonne pour le jeton \n");
+scanf("%d",&choixC);
+printf("Vous voulez mettre votre jeton dans la ligne %d et dans  la colonne %d\n",choixL,choixC);
+
+placementJeton(choixL,choixC);
 }
