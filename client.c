@@ -21,24 +21,25 @@ void com(int sd,struct sockaddr_in svc){
     char addr[15];
     int port;
     char reponse[MAX_BUFF];
+    printf("attente du mode\n");
     while(1){
-        if(read(sd,reponse,sizeof(reponse))==1){ //le serveur a notifier (1) donc mode serveur
+        if(read(sd,reponse,sizeof(reponse))=="1"){ //le serveur a notifier (1) donc mode serveur
+        printf("mode serv\n");
          serverMode(sd,svc);
      }
-        if(read(sd,reponse,sizeof(reponse))==2){ //le serveur a notifier (2) donc mode serveur
+        if(read(sd,reponse,sizeof(reponse))=="2"){ //le serveur a notifier (2) donc mode serveur
+        printf("mode client\n");
              write(sd,1,sizeof(1));
              read(sd,reponse,sizeof(reponse)); //reception de l'adresse
              strcpy(addr,reponse);
-             write(sd,2,sizeof(2));                    // le ack est à 2 pour eviter qu'il soit confondu avec le premier
-             read(sd,reponse,sizeof(reponse));//reception du port
-             port = reponse;
+             write(sd,2,sizeof(2));           // le ack est à 2 pour eviter qu'il soit confondu avec le premier
              close(sd);
-             clientMode(addr,port);
+             clientMode(addr);
      }
     }
 }
 
-void clientMode(char addr,int port){
+void clientMode(char addr){ // le port est fixé à PORT_SVC
     char reponse[MAX_BUFF];
     int sh;
     struct sockaddr_in svc;
@@ -47,7 +48,7 @@ void clientMode(char addr,int port){
 
     //connection avec le serv de jeu
     svc.sin_family = PF_INET;
-    svc.sin_port   = htons(atoi(port)); 
+    svc.sin_port   = htons(PORT_SVC);  // le port est fixé à PORT_SVC
     svc.sin_addr.s_addr = inet_addr(addr); 
     memset(&svc.sin_zero, 0, 8); 
     // Demande d’une connexion au service 
@@ -67,7 +68,7 @@ void serverMode(int sd,struct sockaddr_in svc){
 
 }
 
-int printBoard(char board[99][6]){ // fonction en cours de construction dans tableau.c
+int printBoard(){ // fonction en cours de construction dans tableau.c
     //   7 colonne et on bloque la limite du jeu à 100 ligne (à gérer plus tard)
     //la variable board contient uniquement les jetons alors que boardAff contient aussi les element graphique du plateau
     //ici on doit creer le plateau à afficher à partir du tableau board ne contenant que les jetons

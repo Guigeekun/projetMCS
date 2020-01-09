@@ -3,8 +3,7 @@
 int main() {
         int se ,sd,sd2;
         pid_t pid;
-        struct sockaddr_in svc,clt,clt2;
-        socklen_t cltLen,clt2Len;
+        struct sockaddr_in svc,clt,clt2;        
  // Création de la socket de réception d’écoute des appels 
         CHECK(se=socket(PF_INET, SOCK_STREAM, 0), "Can't create");
 
@@ -21,13 +20,13 @@ int main() {
         // Boucle permanente de service 
         while (1) {
                 //  Attente d’un appel
-                cltLen = sizeof(clt);
-                clt2Len = sizeof(clt2);
+                socklen_t cltLen = sizeof(clt);
+                socklen_t clt2Len = sizeof(clt2);
                 printf("En attente player 1\n");
-                CHECK(sd=accept(se, (struct sockaddr *)&clt, &cltLen) , "Can't connect");
+                CHECK(sd=accept(se, (struct sockaddr *) &clt, &cltLen) , "Can't connect");
  
                 printf("waiting for player 2\n");
-                CHECK(sd2=accept(se, (struct sockaddr *)&clt2, &clt2Len) , "Can't connect");
+                CHECK(sd2=accept(se, (struct sockaddr *) &clt2, &clt2Len) , "Can't connect");
                 printf("players ready\n");
                 com(sd,clt,sd2,clt2);
                 close(sd);
@@ -38,14 +37,21 @@ int main() {
         return 0;
 }
 void com(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2) {
+        char ack="1";
+        char ack2="2";
         char reponse[MAX_BUFF];
+        
         printf("debut communication\n");
-        CHECK(write(sd,1,sizeof(1)),"can't write"); //notifie au joueur 1 qu'il est en mode serveur (1)
-        CHECK(write(sd2,2,sizeof(15)),"can't write"); //notifie au joueur 2 qu'il est en mode client (2)
+
+        CHECK(write(sd,&ack,sizeof(ack)+1),"can't write"); //notifie au joueur 1 qu'il est en mode serveur (1)
+        CHECK(write(sd2,&ack2,sizeof(ack2)+1),"can't write"); //notifie au joueur 2 qu'il est en mode client (2)
+
+        printf("notif done\n");
+
         while(read(sd2,reponse,sizeof(reponse))!=1){ //ack
                 sleep(1);
         }
-        write(sd2,clt2.sin_addr.s_addr,10); //envoie de l'addr du serv au client
+        write(sd2,clt2.sin_addr.s_addr,sizeof(clt2.sin_addr.s_addr)); //envoie de l'addr du serv au client
         while(read(sd2,reponse,sizeof(reponse))!=2){ //ack
                 sleep(1);
         }
