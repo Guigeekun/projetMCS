@@ -37,8 +37,8 @@ int main() {
         return 0;
 }
 void com(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2) {
-        char ack="1";
-        char ack2="2";
+        char ack='1';
+        char ack2='2';
         char reponse[MAX_BUFF];
         
         printf("debut communication\n");
@@ -46,7 +46,11 @@ void com(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2) {
         CHECK(write(sd,&ack,sizeof(ack)+1),"can't write"); //notifie au joueur 1 qu'il est en mode serveur (1)
         CHECK(write(sd2,&ack2,sizeof(ack2)+1),"can't write"); //notifie au joueur 2 qu'il est en mode client (2)
 
+
         printf("notif done\n");
+
+                printf("%c\n",ack);
+        printf("%c\n",ack2);
 
         while(read(sd2,reponse,sizeof(reponse))!=1){ //ack
                 sleep(1);

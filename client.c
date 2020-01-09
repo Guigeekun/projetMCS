@@ -23,11 +23,11 @@ void com(int sd,struct sockaddr_in svc){
     char reponse[MAX_BUFF];
     printf("attente du mode\n");
     while(1){
-        if(read(sd,reponse,sizeof(reponse))=="1"){ //le serveur a notifier (1) donc mode serveur
+        if(read(sd,reponse,sizeof(reponse))=='1'){ //le serveur a notifier (1) donc mode serveur
         printf("mode serv\n");
          serverMode(sd,svc);
      }
-        if(read(sd,reponse,sizeof(reponse))=="2"){ //le serveur a notifier (2) donc mode serveur
+        if(read(sd,reponse,sizeof(reponse))=='2'){ //le serveur a notifier (2) donc mode serveur
         printf("mode client\n");
              write(sd,1,sizeof(1));
              read(sd,reponse,sizeof(reponse)); //reception de l'adresse
