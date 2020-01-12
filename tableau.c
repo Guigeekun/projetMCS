@@ -12,6 +12,30 @@ int choixC;
 void creationTableau();
 
 
+void demande()
+{
+
+	printf("Veuillez entrer le numéro de ligne sur le jeton:\n");
+	scanf("%d",&choixL);
+while(choixL==0)
+{
+	printf("Il faut entrer un nombre supérieur à 0!!\n");
+	printf("Veuillez entrer le numéro de ligne sur le jeton:\n");
+	scanf("%d",&choixL);
+}
+	printf ("Veuillez entrer le numéro de colonne pour le jeton \n");
+	scanf("%d",&choixC);
+while(choixC==0)
+{
+	printf("Il faut entrer un nombre supérieur à 0!!\n");
+	printf("Veuillez entrer le numéro de colonne sur le jeton:\n");
+	scanf("%d",&choixC);
+}	
+printf("Vous voulez mettre votre jeton dans la ligne %d et dans  la colonne %d\n",choixL,choixC);
+
+placementJeton(choixL,choixC);
+
+}
 void creationTableau()
 {
 
@@ -26,7 +50,7 @@ void creationTableau()
 		tab[COL-1][j+1]='_';	
 	}
 
-	for(i=0;i<LIG-1;i++) //à modifier pour mettre le tab dans le bon sens 
+	for(i=0;i<LIG-1;i++) 
 	{
 		for(j=0;j<COL;j++)
 		{
@@ -61,32 +85,15 @@ void placementJeton(choixL,choixC)
 		}
 		
 		printf("\n");
-		
+	/// Condition	
 	}
-
+	
+demande();
 }
 
 int main()
 {
 creationTableau();
-
-	printf("Veuillez entrer le numéro de ligne sur le jeton:\n");
-	scanf("%d",&choixL);
-while(choixL==0)
-{
-	printf("Il faut entrer un nombre supérieur à 0!!\n");
-	printf("Veuillez entrer le numéro de ligne sur le jeton:\n");
-	scanf("%d",&choixL);
-}
-	printf ("Veuillez entrer le numéro de colonne pour le jeton \n");
-	scanf("%d",&choixC);
-while(choixC==0)
-{
-	printf("Il faut entrer un nombre supérieur à 0!!\n");
-	printf("Veuillez entrer le numéro de colonne sur le jeton:\n");
-	scanf("%d",&choixC);
-}	
-printf("Vous voulez mettre votre jeton dans la ligne %d et dans  la colonne %d\n",choixL,choixC);
-
+demande();
 placementJeton(choixL,choixC);
 }
