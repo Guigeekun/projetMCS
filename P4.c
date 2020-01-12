@@ -1,3 +1,18 @@
+/* ------------------------------------------------------------------------ */
+/**
+ *  \file       P4.c
+ *  \brief     Code du jeu Puissance4
+ *
+ *  \author     Lucas Dorczysnki
+ *
+ *  \date       decembre 2019
+ *
+ *  \version    1.0
+ *
+ *  
+ */
+
+ 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -9,16 +24,39 @@ int j;
 char tab[COL][LIG];
 int remplissage[7];
 int choixC;
-void creationTableau();
 
-int calcul(int c,int l, int dirV, int dirH)
+/*************************************************************************************************************************************************************
+ *                                                              PROTOTYPES DES FONCTIONS
+ * */
+
+int calculNBJetons(int ,int, int, int);
+void creationTableau();
+int grillePleine();
+int jouable(int);
+int partieGagnante(int, int);
+int saisirCoup();
+//***********************************************************************************************************************************************************
+
+
+/**
+ *  \file       P4.c --> fonction init
+ *  \brief    Fonction permettant de calculer les jetons qui se suivent dans toutes les directions  
+ *  
+ *  \version    1.0
+ *  
+ * 
+ * *			
+ */
+
+
+int calculNBJetons(int c,int l, int dirV, int dirH)
 {
     int jeton=0;
-    if(dirV==0)
+    if(dirV==0)// si on reste sur la même ligne
     {
         if(dirH==1)
         {
-            while((tab[l][c])==(tab[l][c+1])&&(tab[l][c]!=' '))
+            while((tab[l][c])==(tab[l][c+1])&&(tab[l][c]!=' '))// calcul des jetons en horizontale droite de 0 vers 7
             {
                 jeton++;
                 c++;
@@ -26,7 +64,7 @@ int calcul(int c,int l, int dirV, int dirH)
         }
         else if(dirH==-1)
         {
-            while((tab[l][c])==(tab[l][c-1])&&(tab[l][c]!=' '))
+            while((tab[l][c])==(tab[l][c-1])&&(tab[l][c]!=' ')) // calcul des jetons en horizontale gauche de 7 vers 0
             {
                 jeton++;
                 c--;
@@ -34,19 +72,19 @@ int calcul(int c,int l, int dirV, int dirH)
         }
 
     }
-    if(dirV==1)
+    if(dirV==1)// Si on change de ligne (on monte)
     {
-        if(dirH==0)
+        if(dirH==0)// on reste dans la même colonne 
         {
-            while((tab[l][c])==(tab[l+1][c])&&(tab[l][c]!=' '))
+            while((tab[l][c])==(tab[l+1][c])&&(tab[l][c]!=' '))// calcul des jetons en vertical de 0 vers 6
             {
                 jeton++;
                 l++;
             }
         }
-        else if(dirH==1)
+        else if(dirH==1) // on change de colonne
         {
-            while((tab[l][c])==(tab[l+1][c+1])&&(tab[l][c]!=' '))
+            while((tab[l][c])==(tab[l+1][c+1])&&(tab[l][c]!=' '))//calcul des jetons de manière diagonale (haut -droite) de 0 vers 7
             {
                 jeton++;
                 c++;
@@ -55,7 +93,7 @@ int calcul(int c,int l, int dirV, int dirH)
         }
         else if(dirH==-1)
         {
-            while((tab[l][c])==(tab[l+1][c-1])&&(tab[l][c]!=' '))
+            while((tab[l][c])==(tab[l+1][c-1])&&(tab[l][c]!=' ')) //calcul des jetons de manière  diagonale (bas-droit vers haut-gauche)
             {
                 jeton++;
                 c--;
@@ -63,11 +101,11 @@ int calcul(int c,int l, int dirV, int dirH)
             }
         }
     }
-    if(dirV==-1)
+    if(dirV==-1) //si on change de ligne (on descend)
     {
-        if(dirH==0)
+        if(dirH==0) // on reste dans la même colonne
         {
-            while((tab[l][c])==(tab[l-1][c])&&(tab[l][c]!=' '))
+            while((tab[l][c])==(tab[l-1][c])&&(tab[l][c]!=' '))// calcul des jetons verticaux bas (de haut en bas)
             {
                 jeton++;
                 l--;
@@ -76,7 +114,7 @@ int calcul(int c,int l, int dirV, int dirH)
         }
         else if(dirH==-1)
         {
-            while((tab[l][c])==(tab[l-1][c-1])&&(tab[l][c]!=' '))
+            while((tab[l][c])==(tab[l-1][c-1])&&(tab[l][c]!=' '))// calcul des jetons diagnaux haut-droit vers bas-gauche
             {
                 jeton++;
                 c--;
@@ -85,7 +123,7 @@ int calcul(int c,int l, int dirV, int dirH)
         }
         else if(dirH==1)
         {
-            while((tab[l][c])==(tab[l-1][c+1])&&(tab[l][c]!=' '))
+            while((tab[l][c])==(tab[l-1][c+1])&&(tab[l][c]!=' '))// calculs des jetons diagonaux (haut-gauche vers bas-droit)
             {
                 jeton++;
                 c++;
@@ -97,34 +135,53 @@ int calcul(int c,int l, int dirV, int dirH)
     return jeton;
 }
 
-
+/**
+ *  \file       P4.c --> fonction créationTableau
+ *  \brief    Fonction permettant de créer la grille de jeu
+ *  
+ *  \version    1.0
+ *  
+ * 
+ * *			
+ */
 void creationTableau()
 {
 	int i, j;
-	for(i=1;i<6;i++){
-    printf("\t\t\t");
-    printf("+-+-+-+-+-+-+-+");
+	for(i=1;i<6;i++)
+    {
+        printf("\t\t\t");
+        printf("+-+-+-+-+-+-+-+");
 
-    printf("\n");
-    printf("\t\t\t");
-    for (j=0;j<7;j++)
+        printf("\n");
+        printf("\t\t\t");
+        for (j=0;j<7;j++)
 
-    printf("|%c",tab[5-i][j]);
+        printf("|%c",tab[5-i][j]);
 
-    printf("|%d \n",i);// affiche les numéros horizontalement
+        printf("|%d \n",i);// affiche les numéros horizontalement
 
-                    }
+   }
     if (i==6)
-    printf("\t\t\t");
+        printf("\t\t\t");
     printf("+-+-+-+-+-+-+-+");
     printf("\n");
     printf("\t\t\t");
     for(j=0;j<=6;j++)
-                     {
-    printf(" %d",j);// affiche les numéro verticalement
-                     }
+    {
+        printf(" %d",j);// affiche les numéro verticalement
+    }
     printf("\n\n\t\t");
 }
+
+/**
+ *  \file       P4.c --> fonction grillePleine
+ *  \brief    Fonction permettant de vérifier si on peut encore jouer un coup  si la grille est pleine fin de partie
+ *  
+ *  \version    1.0
+ *  
+ * 
+ * *			
+ */
 
 int grillePleine()
 {
@@ -139,6 +196,14 @@ int grillePleine()
     else return 0;
     
 }
+
+/**
+ *  \file       P4.c --> fonction jouable
+ *  \brief    Fonction permettant de vérifier si on peut jouer un coup pas de superposition de jeton
+ *  \version    1.0
+ * 
+ * 			
+ */
 
 int jouable(int x)
 {
@@ -155,17 +220,39 @@ int jouable(int x)
     
 
 }
-
+/**
+ *  \file       P4.c --> fonction partieGagnante
+ *  \brief    Fonction permettant de vérifier les conditions de victoire
+ *  
+ *  \version    1.0
+ *  
+ *  \remark la première condition  vérifie les jetons horizontalement, la seconde verticalement, la troisième diagonalement ( haut-droit vers bas gauche) la 
+ * quatrième diagonalement (haut gauche- bas droite)
+ * 
+ *  
+ * *			
+ */
 int partieGagnante(int c, int l)
 {
-    if  ((calcul(c,l,0,1)+calcul(c,l,0,-1))>=3 ||
-  (calcul(c,l,1,0)+calcul(c,l,-1,0))>=3 ||
-  (calcul(c,l,1,1)+calcul(c,l,-1,-1))>=3 ||
-  (calcul(c,l,1,-1) + calcul(c,l,-1,1)>=3))
+    if  ((calculNBJetons(c,l,0,1)+calculNBJetons(c,l,0,-1))>=3 ||
+  (calculNBJetons(c,l,1,0)+calculNBJetons(c,l,-1,0))>=3 ||
+  (calculNBJetons(c,l,1,1)+calculNBJetons(c,l,-1,-1))>=3 ||
+  (calculNBJetons(c,l,1,-1) + calculNBJetons(c,l,-1,1)>=3))
   return 1;
   else return 0;
 }
 
+ /**
+ *  \file       P4.c --> fonction SaisirCoup 
+ *  \brief    Fonction permettant de  placer un jeton  
+ *  
+ *  \version    1.0
+ *  
+ *  \remark appel la fonction jouable()
+ * 
+ *  
+ * 			
+ */
 int saisirCoup()
 {
 	int choixC;
@@ -181,6 +268,8 @@ printf("Vous voulez mettre votre jeton  dans  la colonne %d\n",choixC);
 
 	}while(jouable(choixC)!=1);
 }
+
+
 
 int main()
 {
@@ -198,7 +287,7 @@ int main()
 
 	for(j=0;j<7;j++)
 	{
-		remplissage[j]=0;
+		remplissage[j]=0;// remplissage fait référence au remplissage  de la colonne
 	}
 
     do
