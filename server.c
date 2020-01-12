@@ -56,8 +56,8 @@ void com(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2) {
                 sleep(1);
         }
         printf("reception\n");
-
-        write(sd2,clt2.sin_addr.s_addr,sizeof(clt2.sin_addr.s_addr)); //envoie de l'addr du serv au client
+        char addr[MAX_BUFF] = clt2.sin_addr.s_addr;
+        write(sd2,addr,sizeof(addr)); //envoie de l'addr du serv au client
         printf("envoie addr\n");
         read(sd2,reponse,sizeof(reponse));
         while(atoi(reponse)!=2){ //OK2

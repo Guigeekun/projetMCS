@@ -33,7 +33,7 @@ void com(int sd,struct sockaddr_in svc){
                                 write(sd,OK,sizeof(OK)+1);
                                 printf("envoie1\n");
                                 sleep(2); //pour eviter qu'il lise avant que le serveur ait écrit
-                                read(sd,buffer,sizeof(buffer)); 
+                                read(sd,buffer,sizeof(buffer)); // erreur ici fix ASAP
                                 strcpy(addr,buffer);
                                 printf("reception addr\n");
                                 write(sd,OK2,sizeof(OK2)+1);   // le ack est à 2 pour eviter qu'il soit confondu avec le premier
