@@ -1,5 +1,7 @@
 #include  "shared.h"
 
+void com(int,struct sockaddr_in,int,struct sockaddr_in );
+
 int main() {
         int se ,sd,sd2;
         pid_t pid;
@@ -14,7 +16,7 @@ int main() {
         memset(&svc.sin_zero, 0, 8); 
         printf("Fin initiatlisation \n ");
         // Association de l’adressage préparé avec la socket d’écoute
-        CHECK(bind(se, (struct sockaddr *) &svc, sizeof(svc)) , "Can't bind")
+        CHECK(bind(se, (struct sockaddr *) &svc, sizeof(svc)) , "Can't bind");
         // Mise en écoute de la socket 
         CHECK(listen(se, 5) , "Can't calibrate");
         // Boucle permanente de service 
@@ -27,7 +29,6 @@ int main() {
  
                 printf("waiting for player 2\n");
                 CHECK(sd2=accept(se, (struct sockaddr *) &clt2, &clt2Len) , "Can't connect");
-                printf("players ready\n");
                 com(sd,clt,sd2,clt2);
                 close(sd);
                 close(sd2);
@@ -56,13 +57,20 @@ void com(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2) {
                 sleep(1);
         }
         printf("reception\n");
-        char addr[MAX_BUFF] = clt2.sin_addr.s_addr;
-        write(sd2,addr,sizeof(addr)); //envoie de l'addr du serv au client
+        char addr[INET_ADDRSTRLEN];
+        inet_ntop(AF_INET, &clt2.sin_addr, addr, INET_ADDRSTRLEN);
+        write(sd2,addr,sizeof(addr)+1); //envoie de l'addr du serv au client
         printf("envoie addr\n");
         read(sd2,reponse,sizeof(reponse));
-        while(atoi(reponse)!=2){ //OK2
+        while(atoi(reponse)!=2){ //attente d'ack (OK2) du client
                 read(sd2,reponse,sizeof(reponse));
+                 printf("waiting for ack\n");
                 sleep(1);
         }
+        char port[1024];
+        inet_ntop(AF_INET, &clt2.sin_port, port, INET_ADDRSTRLEN);
+        write(sd2,port,sizeof(port)+1); //envoie de l'addr du serv au client
+        printf("envoie port\n");
+
          printf("job done, peut acceuillir d'autre client\n");
 }

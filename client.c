@@ -1,5 +1,9 @@
 #include  "shared.h"
 
+void com(int,struct sockaddr_in);
+void serverMode();
+void clientMode(char addr[INET_ADDRSTRLEN],int);
+
 int main(int c,char* v[] ) {
     int sa; 
     struct sockaddr_in svc; 
@@ -18,27 +22,28 @@ int main(int c,char* v[] ) {
 }
 
 void com(int sd,struct sockaddr_in svc){
-    char addr[15];
     char reponse[MAX_BUFF];
+    char port[MAX_BUFF];
+    char addr[INET_ADDRSTRLEN];
     printf("attente du mode\n");
 
     while(1){
         read(sd, buffer, sizeof(reponse));
-        printf("%d\n",atoi(buffer));
         switch (atoi(buffer)) {
                         case 1 :serverMode(sd,svc);
                                 close(sd);break;
 
                         case 2 :printf("mode client\n");
                                 write(sd,OK,sizeof(OK)+1);
-                                printf("envoie1\n");
-                                sleep(2); //pour eviter qu'il lise avant que le serveur ait écrit
-                                read(sd,buffer,sizeof(buffer)); // erreur ici fix ASAP
+                                printf("envoie OK\n");
+                                read(sd,buffer,sizeof(buffer)); // lecture de l'addresse
                                 strcpy(addr,buffer);
                                 printf("reception addr\n");
                                 write(sd,OK2,sizeof(OK2)+1);   // le ack est à 2 pour eviter qu'il soit confondu avec le premier
-                                printf("envoie2\n");
-                                clientMode(addr);
+                                printf("envoie OK2\n");
+                                read(sd,buffer,sizeof(buffer)); //lecture du port
+                                strcpy(port,buffer);
+                                clientMode(addr,buffer);
                                 close(sd);break;
 
                         default :   break;
@@ -46,33 +51,52 @@ void com(int sd,struct sockaddr_in svc){
     }
 }
 
-void clientMode(char addr){ // le port est fixé à PORT_SVC
+void clientMode(char addr[INET_ADDRSTRLEN],int port){ // le port est fixé à PORT_SVC
     char reponse[MAX_BUFF];
     int sh;
-    char* ack=OK;
     struct sockaddr_in svc;
     printf("communication coté client\n");
     CHECK(sh=socket(PF_INET, SOCK_STREAM  , 0), "Can't create");
 
+    printf("%d\n",htons(atoi(port)));
+    printf("%s\n",addr);
+
     //connection avec le serv de jeu
     svc.sin_family = PF_INET;
-    svc.sin_port   = htons(PORT_SVC);  // le port est fixé à PORT_SVC
-    svc.sin_addr.s_addr = inet_addr(addr); 
+    svc.sin_port = (htons(atoi(port)));
+    inet_pton(AF_INET, addr, &(svc.sin_addr));
+
     memset(&svc.sin_zero, 0, 8); 
+    
     // Demande d’une connexion au service 
+    printf("connect");
     CHECK(connect(sh, (struct sockaddr *)&svc, sizeof(svc)) , "Can't connect");
     printf("conection réussi\n");
-    write(sh,&ack,sizeof(ack));
+    write(sh,OK,sizeof(OK));
 
 }
 
-void serverMode(int sd,struct sockaddr_in svc){
+void serverMode(){
+    struct sockaddr_in svc; 
+    int se,sd;
+    struct sockaddr_in clt;
     char reponse[MAX_BUFF];
+
     printf("mode serv\n");
-    while(atoi(reponse)!=1){ //attente du client
-        read(sd, reponse, sizeof(reponse));
-        printf("waiting for player 2\n");
-    }
+    svc.sin_family = PF_INET; 
+    svc.sin_port   = htons (PORT_SVC+1);
+    svc.sin_addr.s_addr = INADDR_ANY; 
+    memset(&svc.sin_zero, 0, 8); 
+
+    CHECK(se=socket(PF_INET, SOCK_STREAM, 0), "Can't create");
+
+    CHECK(bind(se, (struct sockaddr *) &svc, sizeof(svc)) , "Can't bind");
+
+    printf("waiting for player 2\n");
+    CHECK(listen(se, 5) , "Can't calibrate");
+    printf("listening\n");
+    CHECK(sd=accept(se, (struct sockaddr *) &clt, sizeof(clt)) , "Can't connect");
+
     printf("Connection established - starting the game\n");
     //debut de la partie
 
