@@ -58,18 +58,20 @@ void com(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2) {
         }
         printf("reception\n");
         char addr[INET_ADDRSTRLEN];
-        inet_ntop(AF_INET, &clt2.sin_addr, addr, INET_ADDRSTRLEN);
+        inet_ntop(AF_INET, &clt.sin_addr, addr, INET_ADDRSTRLEN);
         write(sd2,addr,sizeof(addr)+1); //envoie de l'addr du serv au client
         printf("envoie addr\n");
+
         read(sd2,reponse,sizeof(reponse));
         while(atoi(reponse)!=2){ //attente d'ack (OK2) du client
                 read(sd2,reponse,sizeof(reponse));
                  printf("waiting for ack\n");
                 sleep(1);
         }
-        char port[1024];
-        inet_ntop(AF_INET, &clt2.sin_port, port, INET_ADDRSTRLEN);
-        write(sd2,port,sizeof(port)+1); //envoie de l'addr du serv au client
+
+        int port;
+        port = ntohs(clt.sin_port);
+        write(sd2,port,sizeof(port)+1); //envoie du port du serv au client
         printf("envoie port\n");
 
          printf("job done, peut acceuillir d'autre client\n");
