@@ -76,9 +76,8 @@ void clientMode(char addr[INET_ADDRSTRLEN]){ // le port est fixé à PORT_SVC
     printf("Connection established - starting the game\n");
     
     //debut de la partie
-    while(1){
-        game(2,sh);
-    }
+           game(2,sh);
+    
 }
 
 void serverMode(){
@@ -106,9 +105,8 @@ void serverMode(){
 
     printf("Connection established - starting the game\n");
     //debut de la partie
-    while(1){
-        game(2,sd);
-    }
+            game(2,sd);
+    
 
 }
 
@@ -116,9 +114,42 @@ void game(int mode,int sock){
     createBoard();
 }
 
-int createBoard(){ // fonction en cours de construction dans tableau.c
-    //   7 colonne et on bloque la limite du jeu à x ligne (à gérer plus tard)
-    //la variable board contient uniquement les jetons alors que boardAff contient aussi les element graphique du plateau
-    //ici on doit creer le plateau à afficher à partir du tableau board ne contenant que les jetons
-    
+int createBoard(){ 
+int i,j;
+for (i=0;i<6;i++)
+     {
+        for (j=0;j<7;j++)
+        {
+             tab[i][j]=' ';
+        }
+     }
+
+
+	for(i=1;i<6;i++)
+    {
+        printf("\t\t\t");
+        printf("+-+-+-+-+-+-+-+");
+
+        printf("\n");
+        printf("\t\t\t");
+        for (j=0;j<7;j++)
+
+        printf("|%c",tab[5-i][j]);
+
+        printf("|%d \n",i);// affiche les numéros horizontalement
+
+   }
+    if (i==6)
+        printf("\t\t\t");
+    printf("+-+-+-+-+-+-+-+");
+    printf("\n");
+    printf("\t\t\t");
+    for(j=0;j<=6;j++)
+    {
+        printf(" %d",j);// affiche les numéro verticalement
     }
+    printf("\n\n\t\t");
+    
+    while(1);
+}
+    

@@ -19,3 +19,6 @@
 #define COL 15
 #define MAX_BUFF 2048
 char buffer[MAX_BUFF];
+char tab[COL][LIG];
+int remplissage[7];
+int choixC;
