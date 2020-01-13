@@ -77,7 +77,7 @@ void clientMode(char addr[INET_ADDRSTRLEN]){ // le port est fixé à PORT_SVC
     
     //debut de la partie
     while(1){
-        //insert game here
+        game(2,sh);
     }
 }
 
@@ -107,9 +107,13 @@ void serverMode(){
     printf("Connection established - starting the game\n");
     //debut de la partie
     while(1){
-        //insert game here
+        game(2,sd);
     }
 
+}
+
+void game(int mode,int sock){
+    createBoard();
 }
 
 int createBoard(){ // fonction en cours de construction dans tableau.c
