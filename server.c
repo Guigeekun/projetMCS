@@ -74,5 +74,5 @@ void com(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2) {
         write(sd2,port,sizeof(port)+1); //envoie du port du serv au client
         printf("envoie port\n");
 
-         printf("job done, peut acceuillir d'autre client\n");
+         printf("job done, peut acceuillir d'autre client\n\n");
 }
