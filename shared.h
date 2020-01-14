@@ -1,3 +1,17 @@
+/* ------------------------------------------------------------------------ */
+/**
+ *  \file      shared.c
+ *  \brief     Variables global pour Puissance 4
+ *
+ *  \author     Lucas Dorczysnki & Guilleme Benoit
+ *
+ *  \date       decembre 2019
+ *
+ *  \version    1.0
+ *
+ *  
+ */
+
 #define CHECK(sts,msg) if ((sts) == -1) {perror(msg);exit(-1);}
 #include <unistd.h> 
 #include <stdlib.h> 
@@ -15,8 +29,9 @@
 
 #define OK "1" 
 #define OK2 "2"
-#define LIG 16
-#define COL 15
+#define ACK "-1"
+#define LIG 6
+#define COL 7
 #define MAX_BUFF 2048
 char buffer[MAX_BUFF];
 char tab[COL][LIG];

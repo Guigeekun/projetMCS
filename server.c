@@ -1,6 +1,26 @@
+/* ------------------------------------------------------------------------ */
+/**
+ *  \file      server.c
+ *  \brief     Server de matchmaking pour Puissance 4
+ *
+ *  \author     Lucas Dorczysnki & Guilleme Benoit
+ *
+ *  \date       decembre 2019
+ *
+ *  \version    1.0
+ *
+ *  
+ */
+
 #include  "shared.h"
 
+/*************************************************************************************************************************************************************
+ *                                                              PROTOTYPES DES FONCTIONS
+ * */
+
 void com(int,struct sockaddr_in,int,struct sockaddr_in );
+
+//***********************************************************************************************************************************************************
 
 int main() {
         int se ,sd,sd2;
@@ -24,10 +44,10 @@ int main() {
                 //  Attente d’un appel
                 socklen_t cltLen = sizeof(clt);
                 socklen_t clt2Len = sizeof(clt2);
-                printf("En attente player 1\n");
+                printf("En attente du joueur 1\n");
                 CHECK(sd=accept(se, (struct sockaddr *) &clt, &cltLen) , "Can't connect");
  
-                printf("waiting for player 2\n");
+                printf("En attente du joueur 2\n");
                 CHECK(sd2=accept(se, (struct sockaddr *) &clt2, &clt2Len) , "Can't connect");
                 com(sd,clt,sd2,clt2);
                 close(sd);
@@ -37,6 +57,19 @@ int main() {
         shutdown(se,2);
         return 0;
 }
+/**
+ *  \file       P4.c --> fonction com
+ *  \brief    Définie le mode des deux clients, leur envoie les infos de connexion client -> host
+ * 
+ *  \remark     OK est fixé à "1", Ok2 à "2" et ACK à "-1", voir shared.h
+ * 
+ *  \remark     Le port de l'host n'est pas libre, il est fixé à PORT_SVC+1
+ * 
+ *  \version    1.0
+ * 
+ * *			
+ */
+
 void com(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2) {
         char reponse[MAX_BUFF];
         
@@ -56,16 +89,16 @@ void com(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2) {
         printf("envoie addr\n");
 
         read(sd2,reponse,sizeof(reponse));
-        while(atoi(reponse)!=2){ //attente d'ack (OK2) du client
+        while(atoi(reponse)!=-1){ //attente d'ack (ACK) du client
                 read(sd2,reponse,sizeof(reponse));
                  printf("waiting for ack\n");
                 sleep(1);
         }
 
-        int port;
-        port = ntohs(clt.sin_port);
+  //      int port;
+  //      port = ntohs(clt.sin_port);
   //      write(sd2,port,sizeof(port)+1); //envoie du port du serv au client
   //      printf("envoie port\n");
 
-         printf("job done, peut acceuillir d'autre client\n\n");
+         printf("Job done, peut acceuillir d'autres clients\n\n");
 }

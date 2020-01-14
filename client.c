@@ -1,14 +1,41 @@
+/* ------------------------------------------------------------------------ */
+/**
+ *  \file       client.c
+ *  \brief     Client de jeu pour Puissance 4
+ *
+ *  \author     Lucas Dorczysnki & Guilleme Benoit
+ *
+ *  \date       decembre 2019
+ *
+ *  \version    1.0
+ *
+ *  
+ */
+
 #include  "shared.h"
+
+/*************************************************************************************************************************************************************
+ *                                                              PROTOTYPES DES FONCTIONS
+ * */
 
 void com(int,struct sockaddr_in);
 void serverMode();
 void clientMode(char addr[INET_ADDRSTRLEN]);
+int calculNBJetons(int ,int, int, int);
+void creationTableau();
+int grillePleine();
+int jouable(int);
+int partieGagnante(int, int);
+int saisirCoup();
+void game(int,int,int);
 
-int main(int c,char* v[] ) {
+//***********************************************************************************************************************************************************
+
+int main(int c, char* v[] ) { // Initialise la connexion au serveur de matchmaking
     int sa; 
     struct sockaddr_in svc; 
     // Création de la socket pour envoi de la requête
-    CHECK(sa=socket(PF_INET, SOCK_STREAM  , 0), "Can't create");
+    CHECK(sa=socket(PF_INET, SOCK_STREAM, 0), "Can't create");
 
     // Préparation de l’adressage du service à contacter 
     svc.sin_family = PF_INET;
@@ -21,6 +48,16 @@ int main(int c,char* v[] ) {
     com(sa,svc);
 }
 
+/**
+ *  \file       P4.c --> fonction com
+ *  \brief    Définie le mode des deux clients et receptionne les infos de connexion à l'host
+ *  
+ *  \remark     Le port de l'host n'est pas libre, il est fixé à PORT_SVC+1
+ * 
+ *  \version    1.0
+ * 
+ * *			
+ */
 void com(int sd,struct sockaddr_in svc){ // differencie le server et le client et entame leur connexion, ferme la connexion avec le server de matchmaking
     char reponse[MAX_BUFF];
     int port;
@@ -39,7 +76,7 @@ void com(int sd,struct sockaddr_in svc){ // differencie le server et le client e
                                 read(sd,buffer,sizeof(buffer)); // lecture de l'addresse
                                 strcpy(addr,buffer);
                                 printf("reception addr\n");
-                                write(sd,OK2,sizeof(OK2)+1);   // le ack est à 2 pour eviter qu'il soit confondu avec le premier
+                                write(sd,ACK,sizeof(ACK)+1);   // le ack est à 2 pour eviter qu'il soit confondu avec le premier
                              //   read(sd,buffer,sizeof(buffer)); //lecture du port
                                // strcpy(port, buffer);
                                 close(sd);
@@ -50,6 +87,16 @@ void com(int sd,struct sockaddr_in svc){ // differencie le server et le client e
                             }
     }
 }
+
+/**
+ *  \file       P4.c --> fonction clientMode
+ *  \brief    Crée une connexion entre le client et l'host à partir de l'adresse fourni par le serveur de matchmaking
+ *  
+ *  \version    1.0
+ *  
+ * 
+ * *			
+ */
 
 void clientMode(char addr[INET_ADDRSTRLEN]){ // le port est fixé à PORT_SVC
     char reponse[MAX_BUFF];
@@ -77,7 +124,15 @@ void clientMode(char addr[INET_ADDRSTRLEN]){ // le port est fixé à PORT_SVC
            game(2,2,sh);
     
 }
-
+/**
+ *  \file       P4.c --> fonction serverMode
+ *  \brief    Transforme le client en host
+ *  
+ *  \version    1.0
+ *  
+ * 
+ * *			
+ */
 void serverMode(){
     struct sockaddr_in svc,clt; 
     int se,sd;
@@ -108,35 +163,58 @@ void serverMode(){
 
 }
 
+/**
+ *  \file       P4.c --> fonction game
+ *  \brief    Déroulement du jeu
+ *  
+ *  \version    1.0
+ *  
+ * 
+ * *			
+ */
 void game(int joueur,int mode,int sock){ //le mode correspond au joueur à qui c'est le tour de jouer
     int colonne,ligne;
-    createTableau();
+    creationTableau();
     while(1){ //chaque iteration correspond au tour d'un joueur
         switch (mode)
         {
-        case 1: // le joueur[x,1] est en train de jouer
-            printf("tour de jouer");
+        case 1: // le joueur est en train de jouer
             colonne=saisirCoup(joueur);
-            ligne=remplissage[colonne];
-            printf("3");
-            tab[colonne][ligne]='0';
-            remplissage[colonne]=remplissage[colonne]+1;
+            ligne=remplissage[colonne]; // calcul de la ligne
+            tab[ligne][colonne]='0';
+            remplissage[colonne]=remplissage[colonne]+1; 
             creationTableau();
-            write(sock,colonne,sizeof(colonne)); // pour faciliter l'envoie, on ne communique que la colonne et l'autre joueur calcul la ligne
-            if(partieGagnante(colonne,ligne)==1){
+            write(sock,&colonne,sizeof(colonne)+1); // pour faciliter l'envoie, on ne communique que la colonne et l'autre joueur calcul la ligne
+            while(atoi(buffer)!=-1){ //attente d'ack (ACK)
+                read(sock,buffer,sizeof(buffer));
+                sleep(1);
+        }   
+            printf("ACK completed\n");
+            if(partieGagnante(colonne,ligne)){
+                printf("Gagné\n");
+                while(1);
+            }else if(grillePleine()){
+                printf("Grille pleine - Match nul\n");
                 while(1);
             }
             mode=2;
             break;
         
-        case 2: // le joueur[x,2] attend pour jouer 
-            read(sock,buffer,sizeof(buffer));
-            colonne=buffer;
-            ligne=remplissage[colonne];
-            tab[colonne][ligne]='X';
+        case 2: // le joueur attend pour jouer 
+            printf("En attente de l'autre joueur\n");
+            read(sock,buffer,sizeof(buffer)); //lecture de la colonne joué par l'autre joueur
+            colonne=atoi(buffer);
+            write(sock,ACK,sizeof(ACK)+1); // envoie ACK
+            
+            ligne=remplissage[colonne]; // calcul de la ligne
+            tab[ligne][colonne]='X';
             remplissage[colonne]=remplissage[colonne]+1;
             creationTableau();
-            if(partieGagnante(colonne,ligne)==1){
+            if(partieGagnante(colonne,ligne)){
+                printf("Perdu\n");
+                while(1);}
+            else if(grillePleine()){
+                printf("Grille pleine - Match nul\n");
                 while(1);
             }
             mode=1;
@@ -145,7 +223,16 @@ void game(int joueur,int mode,int sock){ //le mode correspond au joueur à qui c
     }
 }
 
-int creationTableau(){  //crée le tableau de jeu
+/**
+ *  \file       P4.c --> fonction creationTableau
+ *  \brief    Fonction permettant de créer la grille de jeu
+ *  
+ *  \version    1.0
+ *  
+ * 
+ * *			
+ */
+void creationTableau(){  //crée le tableau de jeu
 int i,j;
 for (i=0;i<6;i++)
      {
@@ -181,7 +268,16 @@ for (i=0;i<6;i++)
     }
     printf("\n\n\t\t");
 }
-    
+
+/**
+ *  \file       P4.c --> fonction serverMode
+ *  \brief    Transforme le client en host
+ *  
+ *  \version    1.0
+ *  
+ * 
+ * *			
+ */
 int saisirCoup() //permet au joueur de choisir une colonne (avec verification de la jouabilité)
 {
 
@@ -200,6 +296,13 @@ printf("Vous voulez mettre votre jeton  dans  la colonne %d\n",choixC);
 	}while(jouable(choixC)!=1);
 }
 
+/**
+ *  \file       P4.c --> fonction jouable
+ *  \brief    Fonction permettant de vérifier si on peut jouer un coup pas de superposition de jeton
+ *  \version    1.0
+ * 
+ * 			
+ */
 int jouable(int x) //permet de verifier si une colonne est jouable
 {
 	if(x>0 &&(x<7)&&remplissage[x]>=0 && remplissage[x]<6)
@@ -213,7 +316,17 @@ int jouable(int x) //permet de verifier si une colonne est jouable
     return 0;
     }
 }
-
+/**
+ *  \file       P4.c --> fonction partieGagnante
+ *  \brief    Fonction permettant de vérifier les conditions de victoire
+ *  
+ *  \version    1.0
+ *  
+ *  \remark la première condition  vérifie les jetons horizontalement, la seconde verticalement, la troisième diagonalement ( haut-droit vers bas gauche) la 
+ * quatrième diagonalement (haut gauche- bas droite)
+ * 
+ * *			
+ */
 int partieGagnante(int c, int l) // vérifie si un coup fait gagner le joueur
 {
     if  ((calculNBJetons(c,l,0,1)+calculNBJetons(c,l,0,-1))>=3 ||
@@ -308,4 +421,25 @@ int calculNBJetons(int c,int l, int dirV, int dirH)
         }
     }
     return jeton;
+}
+/**
+ *  \file       P4.c --> fonction grillePleine
+ *  \brief    Fonction permettant de vérifier si on peut encore jouer un coup  si la grille est pleine fin de partie
+ *  
+ *  \version    1.0
+ *  
+ * 
+ * *			
+ */
+int grillePleine() //vérifie si la grille est plein et donc termine la partie
+{
+    int i;
+    for(i=0;i<5;i++)
+    {
+    if(jouable(i))
+        return 0;
+    }
+    return 1; // grille pleine ---> fin du jeu
+
+    
 }
