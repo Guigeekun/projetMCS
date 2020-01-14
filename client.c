@@ -21,7 +21,7 @@ int main(int c,char* v[] ) {
     com(sa,svc);
 }
 
-void com(int sd,struct sockaddr_in svc){
+void com(int sd,struct sockaddr_in svc){ // differencie le server et le client et entame leur connexion, ferme la connexion avec le server de matchmaking
     char reponse[MAX_BUFF];
     int port;
     char addr[INET_ADDRSTRLEN];
@@ -36,13 +36,11 @@ void com(int sd,struct sockaddr_in svc){
 
                         case 2 :printf("mode client\n");
                                 write(sd,OK,sizeof(OK)+1);
-                                printf("envoie OK\n");
                                 read(sd,buffer,sizeof(buffer)); // lecture de l'addresse
                                 strcpy(addr,buffer);
                                 printf("reception addr\n");
                                 write(sd,OK2,sizeof(OK2)+1);   // le ack est à 2 pour eviter qu'il soit confondu avec le premier
-                                printf("envoie OK2\n");
-                                read(sd,buffer,sizeof(buffer)); //lecture du port
+                             //   read(sd,buffer,sizeof(buffer)); //lecture du port
                                // strcpy(port, buffer);
                                 close(sd);
                                 clientMode(addr);
@@ -76,7 +74,7 @@ void clientMode(char addr[INET_ADDRSTRLEN]){ // le port est fixé à PORT_SVC
     printf("Connection established - starting the game\n");
     
     //debut de la partie
-           game((2,2),sh);
+           game(2,2,sh);
     
 }
 
@@ -105,32 +103,32 @@ void serverMode(){
 
     printf("Connection established - starting the game\n");
     //debut de la partie
-            game((1,1),sd);
+            game(1,1,sd);
     
 
 }
 
-void game(int joueur[1],int sock){ //le mode correspond au joueur à qui c'est le tour de jouer
+void game(int joueur,int mode,int sock){ //le mode correspond au joueur à qui c'est le tour de jouer
     int colonne,ligne;
     creationTableau();
     while(1){ //chaque iteration correspond au tour d'un joueur
-        switch (joueur[1])
+        switch (mode)
         {
-        case 1:
-            
-            colonne=saisirCoup();
+        case 1: // le joueur[x,1] est en train de jouer
+            printf("tour de jouer");
+            colonne=saisirCoup(joueur);
             ligne=remplissage[colonne];
             tab[colonne][ligne]='0';
             remplissage[colonne]=remplissage[colonne]+1;
             creationTableau();
-            write(sock,colonne,sizeof(colonne));
+            write(sock,colonne,sizeof(colonne)); // pour faciliter l'envoie, on ne communique que la colonne et l'autre joueur calcul la ligne
             if(partieGagnante(colonne,ligne)==1){
                 while(1);
             }
-            joueur[1]=2;
+            mode=2;
             break;
         
-        case 2:
+        case 2: // le joueur[x,2] attend pour jouer 
             read(sock,buffer,sizeof(buffer));
             colonne=buffer;
             ligne=remplissage[colonne];
@@ -140,13 +138,13 @@ void game(int joueur[1],int sock){ //le mode correspond au joueur à qui c'est l
             if(partieGagnante(colonne,ligne)==1){
                 while(1);
             }
-            joueur[1]=1;
+            mode=1;
             break;
         }
     }
 }
 
-int createTableau(){  //crée le tableau de jeu
+int creationTableau(){  //crée le tableau de jeu
 int i,j;
 for (i=0;i<6;i++)
      {
@@ -223,4 +221,90 @@ int partieGagnante(int c, int l) // vérifie si un coup fait gagner le joueur
   (calculNBJetons(c,l,1,-1) + calculNBJetons(c,l,-1,1)>=3))
   return 1;
   else return 0;
+}
+
+int calculNBJetons(int c,int l, int dirV, int dirH)
+{
+    int jeton=0;
+    if(dirV==0)// si on reste sur la même ligne
+    {
+        if(dirH==1)
+        {
+            while((tab[l][c])==(tab[l][c+1])&&(tab[l][c]!=' '))// calcul des jetons en horizontale droite de 0 vers 7
+            {
+                jeton++;
+                c++;
+            }
+        }
+        else if(dirH==-1)
+        {
+            while((tab[l][c])==(tab[l][c-1])&&(tab[l][c]!=' ')) // calcul des jetons en horizontale gauche de 7 vers 0
+            {
+                jeton++;
+                c--;
+            }
+        }
+
+    }
+    if(dirV==1)// Si on change de ligne (on monte)
+    {
+        if(dirH==0)// on reste dans la même colonne 
+        {
+            while((tab[l][c])==(tab[l+1][c])&&(tab[l][c]!=' '))// calcul des jetons en vertical de 0 vers 6
+            {
+                jeton++;
+                l++;
+            }
+        }
+        else if(dirH==1) // on change de colonne
+        {
+            while((tab[l][c])==(tab[l+1][c+1])&&(tab[l][c]!=' '))//calcul des jetons de manière diagonale (haut -droite) de 0 vers 7
+            {
+                jeton++;
+                c++;
+                l++;
+            }
+        }
+        else if(dirH==-1)
+        {
+            while((tab[l][c])==(tab[l+1][c-1])&&(tab[l][c]!=' ')) //calcul des jetons de manière  diagonale (bas-droit vers haut-gauche)
+            {
+                jeton++;
+                c--;
+                l++;
+            }
+        }
+    }
+    if(dirV==-1) //si on change de ligne (on descend)
+    {
+        if(dirH==0) // on reste dans la même colonne
+        {
+            while((tab[l][c])==(tab[l-1][c])&&(tab[l][c]!=' '))// calcul des jetons verticaux bas (de haut en bas)
+            {
+                jeton++;
+                l--;
+            }
+
+        }
+        else if(dirH==-1)
+        {
+            while((tab[l][c])==(tab[l-1][c-1])&&(tab[l][c]!=' '))// calcul des jetons diagnaux haut-droit vers bas-gauche
+            {
+                jeton++;
+                c--;
+                l--;
+            }
+        }
+        else if(dirH==1)
+        {
+            while((tab[l][c])==(tab[l-1][c+1])&&(tab[l][c]!=' '))// calculs des jetons diagonaux (haut-gauche vers bas-droit)
+            {
+                jeton++;
+                c++;
+                l--;
+
+            }
+        }
+    }
+    return jeton;
 }

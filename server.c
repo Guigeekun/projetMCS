@@ -45,18 +45,11 @@ void com(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2) {
         CHECK(write(sd, OK, strlen(OK)+1), "Can't write"); //notifie au joueur 1 qu'il est en mode serveur (1)
         CHECK(write(sd2, OK2, strlen(OK2)+1), "Can't write"); //notifie au joueur 2 qu'il est en mode client (2)
 
-
-        printf("notif done\n");
-
-        printf("%s\n",OK);
-        printf("%s\n",OK2);
-
         read(sd2,reponse,sizeof(reponse));
         while(atoi(reponse)!=1){ //attente d'ack (OK) du client
                 read(sd2,reponse,sizeof(reponse));
                 sleep(1);
         }
-        printf("reception\n");
         char addr[INET_ADDRSTRLEN];
         inet_ntop(AF_INET, &clt.sin_addr, addr, INET_ADDRSTRLEN);
         write(sd2,addr,sizeof(addr)+1); //envoie de l'addr du serv au client
@@ -71,8 +64,8 @@ void com(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2) {
 
         int port;
         port = ntohs(clt.sin_port);
-        write(sd2,port,sizeof(port)+1); //envoie du port du serv au client
-        printf("envoie port\n");
+  //      write(sd2,port,sizeof(port)+1); //envoie du port du serv au client
+  //      printf("envoie port\n");
 
          printf("job done, peut acceuillir d'autre client\n\n");
 }
