@@ -49,7 +49,7 @@ int main(int c, char* v[] ) { // Initialise la connexion au serveur de matchmaki
 }
 
 /**
- *  \file       P4.c --> fonction com
+ *  \file       client.c --> fonction com
  *  \brief    Définie le mode des deux clients et receptionne les infos de connexion à l'host
  *  
  *  \remark     Le port de l'host n'est pas libre, il est fixé à PORT_SVC+1
@@ -89,7 +89,7 @@ void com(int sd,struct sockaddr_in svc){ // differencie le server et le client e
 }
 
 /**
- *  \file       P4.c --> fonction clientMode
+ *  \file       client.c --> fonction clientMode
  *  \brief    Crée une connexion entre le client et l'host à partir de l'adresse fourni par le serveur de matchmaking
  *  
  *  \version    1.0
@@ -125,7 +125,7 @@ void clientMode(char addr[INET_ADDRSTRLEN]){ // le port est fixé à PORT_SVC
     
 }
 /**
- *  \file       P4.c --> fonction serverMode
+ *  \file       client.c --> fonction serverMode
  *  \brief    Transforme le client en host
  *  
  *  \version    1.0
@@ -164,7 +164,7 @@ void serverMode(){
 }
 
 /**
- *  \file       P4.c --> fonction game
+ *  \file       client.c --> fonction game
  *  \brief    Déroulement du jeu
  *  
  *  \version    1.0
@@ -186,7 +186,7 @@ void game(int joueur,int mode,int sock){ //le mode correspond au joueur à qui c
         switch (mode)
         {
         case 1: // le joueur est en train de jouer
-            colonne=saisirCoup(joueur);
+            colonne=saisirCoup();
             ligne=remplissage[colonne]; // calcul de la ligne
             tab[ligne][colonne]='0';
             remplissage[colonne]=remplissage[colonne]+1; 
@@ -231,7 +231,7 @@ void game(int joueur,int mode,int sock){ //le mode correspond au joueur à qui c
 }
 
 /**
- *  \file       P4.c --> fonction creationTableau
+ *  \file       client.c --> fonction creationTableau
  *  \brief    Fonction permettant de créer la grille de jeu
  *  
  *  \version    1.0
@@ -277,7 +277,7 @@ for (i=0;i<6;i++)
 }
 
 /**
- *  \file       P4.c --> fonction saisirCoup
+ *  \file       client.c --> fonction saisirCoup
  *  \brief    Demande au joueur dans quelle colonne il veut jouer et vérifie la possibilité de jouer
  *  
  *  \version    1.0
@@ -304,7 +304,7 @@ printf("Vous voulez mettre votre jeton  dans  la colonne %d\n",choixC);
 }
 
 /**
- *  \file       P4.c --> fonction jouable
+ *  \file       client.c --> fonction jouable
  *  \brief    Fonction permettant de vérifier si on peut jouer un coup sans superposition de jeton
  *  \version    1.0
  * 
@@ -324,7 +324,7 @@ int jouable(int x) //permet de verifier si une colonne est jouable
     }
 }
 /**
- *  \file       P4.c --> fonction partieGagnante
+ *  \file       client.c --> fonction partieGagnante
  *  \brief    Fonction permettant de vérifier les conditions de victoire
  *  
  *  \version    1.0
@@ -344,7 +344,7 @@ int partieGagnante(int c, int l) // vérifie si un coup fait gagner le joueur
   else return 0;
 }
 /**
- *  \file       P4.c --> fonction calculNBjetons
+ *  \file       client.c --> fonction calculNBjetons
  *  \brief    Fonction permettant de compter le nombres de jetons alignés dans chaque direction
  *  
  *  \version    1.0
@@ -437,7 +437,7 @@ int calculNBJetons(int c,int l, int dirV, int dirH)
     return jeton;
 }
 /**
- *  \file       P4.c --> fonction grillePleine
+ *  \file       client.c --> fonction grillePleine
  *  \brief    Fonction permettant de vérifier si on peut encore jouer un coup  si la grille est pleine fin de partie
  *  
  *  \version    1.0
