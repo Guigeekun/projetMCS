@@ -183,7 +183,7 @@ for (i=0;i<6;i++)
     printf("\n\n\t\t");
 }
     
-int saisirCoup() //permet au joueur de choisir une colonne (avec verification de la jouabilité)
+int saisirCoup(int joueur) //permet au joueur de choisir une colonne (avec verification de la jouabilité)
 {
 
     //ici parametre int qui permet de differencier j1 et j2
