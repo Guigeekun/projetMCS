@@ -76,7 +76,7 @@ void clientMode(char addr[INET_ADDRSTRLEN]){ // le port est fixé à PORT_SVC
     printf("Connection established - starting the game\n");
     
     //debut de la partie
-           game(2,sh);
+           game((2,2),sh);
     
 }
 
@@ -105,33 +105,42 @@ void serverMode(){
 
     printf("Connection established - starting the game\n");
     //debut de la partie
-            game(2,sd);
+            game((1,1),sd);
     
 
 }
 
-void game(int mode,int sock){
+void game(int joueur[1],int sock){ //le mode correspond au joueur à qui c'est le tour de jouer
     int colonne,ligne;
-    while(1){
-        switch (mode)
+    creationTableau();
+    while(1){ //chaque iteration correspond au tour d'un joueur
+        switch (joueur[1])
         {
         case 1:
-            creationTableau();
+            
             colonne=saisirCoup();
             ligne=remplissage[colonne];
-            tab[ligne][colonne]='0';
+            tab[colonne][ligne]='0';
             remplissage[colonne]=remplissage[colonne]+1;
             creationTableau();
             write(sock,colonne,sizeof(colonne));
-
-            mode=2;
+            if(partieGagnante(colonne,ligne)==1){
+                while(1);
+            }
+            joueur[1]=2;
             break;
         
         case 2:
             read(sock,buffer,sizeof(buffer));
             colonne=buffer;
-
-            mode=1;
+            ligne=remplissage[colonne];
+            tab[colonne][ligne]='0';
+            remplissage[colonne]=remplissage[colonne]+1;
+            creationTableau();
+            if(partieGagnante(colonne,ligne)==1){
+                while(1);
+            }
+            joueur[1]=1;
             break;
         }
     }
@@ -204,3 +213,14 @@ int jouable(int x) //permet de verifier si une colonne est jouable
        
     return 0;
     }
+}
+
+int partieGagnante(int c, int l) // vérifie si un coup fait gagner le joueur
+{
+    if  ((calculNBJetons(c,l,0,1)+calculNBJetons(c,l,0,-1))>=3 ||
+  (calculNBJetons(c,l,1,0)+calculNBJetons(c,l,-1,0))>=3 ||
+  (calculNBJetons(c,l,1,1)+calculNBJetons(c,l,-1,-1))>=3 ||
+  (calculNBJetons(c,l,1,-1) + calculNBJetons(c,l,-1,1)>=3))
+  return 1;
+  else return 0;
+}
