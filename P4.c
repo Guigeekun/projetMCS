@@ -3,13 +3,14 @@
  *  \file       P4.c
  *  \brief     Code du jeu Puissance4
  *
- *  \author     Lucas Dorczysnki
+ *  \author     Lucas Dorczysnki & Guilleme Benoit
  *
  *  \date       decembre 2019
  *
  *  \version    1.0
  *
- *  
+ *  \remark     Ce fichier est un fichier de travail -> il n'est pas importé ou utilisé dans le projet final 
+ * 
  */
 
  

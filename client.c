@@ -270,8 +270,8 @@ for (i=0;i<6;i++)
 }
 
 /**
- *  \file       P4.c --> fonction serverMode
- *  \brief    Transforme le client en host
+ *  \file       P4.c --> fonction saisirCoup
+ *  \brief    Demande au joueur dans quelle colonne il veut jouer et vérifie la possibilité de jouer
  *  
  *  \version    1.0
  *  
@@ -298,7 +298,7 @@ printf("Vous voulez mettre votre jeton  dans  la colonne %d\n",choixC);
 
 /**
  *  \file       P4.c --> fonction jouable
- *  \brief    Fonction permettant de vérifier si on peut jouer un coup pas de superposition de jeton
+ *  \brief    Fonction permettant de vérifier si on peut jouer un coup sans superposition de jeton
  *  \version    1.0
  * 
  * 			
@@ -336,7 +336,14 @@ int partieGagnante(int c, int l) // vérifie si un coup fait gagner le joueur
   return 1;
   else return 0;
 }
-
+/**
+ *  \file       P4.c --> fonction calculNBjetons
+ *  \brief    Fonction permettant de compter le nombres de jetons alignés dans chaque direction
+ *  
+ *  \version    1.0
+ * 
+ * *			
+ */
 int calculNBJetons(int c,int l, int dirV, int dirH)
 {
     int jeton=0;

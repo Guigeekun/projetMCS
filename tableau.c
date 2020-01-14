@@ -1,3 +1,20 @@
+/* ------------------------------------------------------------------------ */
+/**
+ *  \file       tableau.c
+ *  \brief     Génération du tableau du Puissance4
+ *
+ *  \author     Lucas Dorczysnki & Guilleme Benoit
+ *
+ *  \date       decembre 2019
+ *
+ *  \version    1.0
+ *
+ *  \remark     Ce fichier est un fichier de travail -> il n'est pas importé ou utilisé dans le projet final 
+ *  \remark		Deprecated, n'est pas docé : les fonctions utilisées sont docé dans les autres fichiers
+ * 
+ */
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
