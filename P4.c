@@ -289,13 +289,17 @@ int main()
 	for(j=0;j<7;j++)
 	{
 		remplissage[j]=0;// remplissage fait référence au remplissage  de la colonne
+        printf("Valeur de remplissage:%d",remplissage[j]);
 	}
 
     do
     {
         creationTableau();
         colonne=saisirCoup();
+        printf("Tu as saisi la colonne %ls",&colonne);
+       
         ligne=remplissage[colonne];
+        printf("Le jeton va se mettre sur la ligne",&ligne);
         tab[ligne][colonne]='0';
         remplissage[colonne]=remplissage[colonne]+1;
         creationTableau();

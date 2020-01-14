@@ -37,3 +37,4 @@ char buffer[MAX_BUFF];
 char tab[COL][LIG];
 int remplissage[7];
 int choixC;
+int j,ligne,colonne;
