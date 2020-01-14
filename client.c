@@ -32,8 +32,21 @@ void game(int,int,int);
 //***********************************************************************************************************************************************************
 
 int main(int c, char* v[] ) { // Initialise la connexion au serveur de matchmaking
-    int sa; 
+    int sa,j,i; 
     struct sockaddr_in svc; 
+
+    for (i=0;i<6;i++)
+     {
+        for (j=0;j<7;j++)
+        {
+             tab[i][j]=' ';
+        }
+     }
+     for(j=0;j<7;j++)
+	{
+        remplissage[j]=0;// remplissage fait référence au remplissage  de la colonne
+		
+	}
     // Création de la socket pour envoi de la requête
     CHECK(sa=socket(PF_INET, SOCK_STREAM, 0), "Can't create");
 
@@ -174,22 +187,18 @@ void serverMode(){
  */
 void game(int joueur,int mode,int sock){ //le mode correspond au joueur à qui c'est le tour de jouer
     int colonne,ligne,j;
-    int remplissage[7];
-    for(j=0;j<7;j++)
-	{
-        remplissage[j]=0;
-		printf("valeur de j %d :" ,remplissage[j]);// remplissage fait référence au remplissage  de la colonne
-	}
+    
+   
 
     creationTableau();
     while(1){ //chaque iteration correspond au tour d'un joueur
         switch (mode)
         {
         case 1: // le joueur est en train de jouer
-            colonne=saisirCoup(joueur);
+            colonne=saisirCoup();
             ligne=remplissage[colonne]; // calcul de la ligne
             tab[ligne][colonne]='0';
-            remplissage[colonne]=remplissage[colonne]+1; 
+            remplissage[colonne]=remplissage[colonne]+1;
             creationTableau();
             write(sock,&colonne,sizeof(colonne)+1); // pour faciliter l'envoie, on ne communique que la colonne et l'autre joueur calcul la ligne
             while(atoi(buffer)!=-1){ //attente d'ack (ACK)
@@ -216,6 +225,12 @@ void game(int joueur,int mode,int sock){ //le mode correspond au joueur à qui c
             ligne=remplissage[colonne]; // calcul de la ligne
             tab[ligne][colonne]='X';
             remplissage[colonne]=remplissage[colonne]+1;
+
+             for(j=0;j<7;j++)
+	{
+            printf("Valeur remplissage %d: %d\n",j,remplissage[j]);
+		
+	}
             creationTableau();
             if(partieGagnante(colonne,ligne)){
                 printf("Perdu\n");
@@ -241,13 +256,7 @@ void game(int joueur,int mode,int sock){ //le mode correspond au joueur à qui c
  */
 void creationTableau(){  //crée le tableau de jeu
 int i,j;
-for (i=0;i<6;i++)
-     {
-        for (j=0;j<7;j++)
-        {
-             tab[i][j]=' ';
-        }
-     }
+
 
 
 	for(i=1;i<6;i++)

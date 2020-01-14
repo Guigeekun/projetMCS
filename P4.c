@@ -302,6 +302,10 @@ int main()
         tab[ligne][colonne]='0';
         remplissage[colonne]=remplissage[colonne]+1;
         creationTableau();
+        for(j=0;j<7;j++)
+	{
+		 printf("Valeur remplissage %d: %d\n",j,remplissage[j]);
+	}
         
     }while((!grillePleine() && !partieGagnante(colonne,ligne)));
     
