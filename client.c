@@ -173,7 +173,14 @@ void serverMode(){
  * *			
  */
 void game(int joueur,int mode,int sock){ //le mode correspond au joueur à qui c'est le tour de jouer
-    int colonne,ligne;
+    int colonne,ligne,j;
+    int remplissage[7];
+    for(j=0;j<7;j++)
+	{
+        remplissage[j]=0;
+		printf("valeur de j %d :" ,remplissage[j]);// remplissage fait référence au remplissage  de la colonne
+	}
+
     creationTableau();
     while(1){ //chaque iteration correspond au tour d'un joueur
         switch (mode)
