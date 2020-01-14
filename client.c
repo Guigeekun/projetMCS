@@ -111,10 +111,33 @@ void serverMode(){
 }
 
 void game(int mode,int sock){
-    createBoard();
+    int colonne,ligne;
+    while(1){
+        switch (mode)
+        {
+        case 1:
+            creationTableau();
+            colonne=saisirCoup();
+            ligne=remplissage[colonne];
+            tab[ligne][colonne]='0';
+            remplissage[colonne]=remplissage[colonne]+1;
+            creationTableau();
+            write(sock,colonne,sizeof(colonne));
+
+            mode=2;
+            break;
+        
+        case 2:
+            read(sock,buffer,sizeof(buffer));
+            colonne=buffer;
+
+            mode=1;
+            break;
+        }
+    }
 }
 
-int createBoard(){ 
+int createTableau(){  //crée le tableau de jeu
 int i,j;
 for (i=0;i<6;i++)
      {
@@ -149,7 +172,35 @@ for (i=0;i<6;i++)
         printf(" %d",j);// affiche les numéro verticalement
     }
     printf("\n\n\t\t");
-    
-    while(1);
 }
     
+int saisirCoup() //permet au joueur de choisir une colonne (avec verification de la jouabilité)
+{
+
+    //ici parametre int qui permet de differencier j1 et j2
+	int choixC;
+	do{
+printf ("Veuillez entrer le numéro de colonne pour le jeton mettez une autre colonne si celle ci est remplie\n");
+	scanf("%d",&choixC);
+printf("Vous voulez mettre votre jeton  dans  la colonne %d\n",choixC);
+	if(jouable(choixC)==1)
+	{
+		
+		return choixC;
+	}
+
+	}while(jouable(choixC)!=1);
+}
+
+int jouable(int x) //permet de verifier si une colonne est jouable
+{
+	if(x>0 &&(x<7)&&remplissage[x]>=0 && remplissage[x]<6)
+    {
+    
+    return 1;
+    }
+	
+	else {
+       
+    return 0;
+    }
