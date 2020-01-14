@@ -58,7 +58,7 @@ int main() {
         return 0;
 }
 /**
- *  \file       P4.c --> fonction com
+ *  \file       server.c --> fonction com
  *  \brief    Définie le mode des deux clients, leur envoie les infos de connexion client -> host
  * 
  *  \remark     OK est fixé à "1", Ok2 à "2" et ACK à "-1", voir shared.h
