@@ -110,7 +110,7 @@ void serverMode(){
 
 void game(int joueur,int mode,int sock){ //le mode correspond au joueur à qui c'est le tour de jouer
     int colonne,ligne;
-    creationTableau();
+    createTableau();
     while(1){ //chaque iteration correspond au tour d'un joueur
         switch (mode)
         {
@@ -118,6 +118,7 @@ void game(int joueur,int mode,int sock){ //le mode correspond au joueur à qui c
             printf("tour de jouer");
             colonne=saisirCoup(joueur);
             ligne=remplissage[colonne];
+            printf("3");
             tab[colonne][ligne]='0';
             remplissage[colonne]=remplissage[colonne]+1;
             creationTableau();
@@ -132,7 +133,7 @@ void game(int joueur,int mode,int sock){ //le mode correspond au joueur à qui c
             read(sock,buffer,sizeof(buffer));
             colonne=buffer;
             ligne=remplissage[colonne];
-            tab[colonne][ligne]='0';
+            tab[colonne][ligne]='X';
             remplissage[colonne]=remplissage[colonne]+1;
             creationTableau();
             if(partieGagnante(colonne,ligne)==1){
@@ -181,7 +182,7 @@ for (i=0;i<6;i++)
     printf("\n\n\t\t");
 }
     
-int saisirCoup(int joueur) //permet au joueur de choisir une colonne (avec verification de la jouabilité)
+int saisirCoup() //permet au joueur de choisir une colonne (avec verification de la jouabilité)
 {
 
     //ici parametre int qui permet de differencier j1 et j2
