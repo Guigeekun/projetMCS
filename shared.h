@@ -30,6 +30,13 @@
 #define OK "1" 
 #define OK2 "2"
 #define ACK "-1"
+#define Col0 "0"
+#define Col1 "1"
+#define Col2 "2"
+#define Col3 "3"
+#define Col4 "4"
+#define Col5 "5"
+#define Col6 "6"
 #define LIG 6
 #define COL 7
 #define MAX_BUFF 2048

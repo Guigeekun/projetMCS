@@ -192,6 +192,7 @@ void game(int joueur,int mode,int sock){ //le mode correspond au joueur à qui c
 
     creationTableau();
     while(1){ //chaque iteration correspond au tour d'un joueur
+    char env;
         switch (mode)
         {
         case 1: // le joueur est en train de jouer
@@ -200,7 +201,35 @@ void game(int joueur,int mode,int sock){ //le mode correspond au joueur à qui c
             tab[ligne][colonne]='0';
             remplissage[colonne]=remplissage[colonne]+1;
             creationTableau();
-            write(sock,&colonne,sizeof(colonne)+1); // pour faciliter l'envoie, on ne communique que la colonne et l'autre joueur calcul la ligne
+
+            switch (colonne)
+            {
+            case 0:
+                write(sock,Col0,sizeof(env)+1);
+                break;
+            case 1:
+                write(sock,Col1,sizeof(env)+1);
+                break;
+            case 2:
+                write(sock,Col2,sizeof(env)+1);
+                break;
+            case 3:
+                write(sock,Col3,sizeof(env)+1);
+                break;
+            case 4:
+                write(sock,Col4,sizeof(env)+1);
+                break;
+            case 5:
+                write(sock,Col5,sizeof(env)+1);
+                break;
+            case 6:
+                write(sock,Col6,sizeof(env)+1);
+                break;
+            }
+            
+             // pour faciliter l'envoie, on ne communique que la colonne et l'autre joueur calcul la ligne
+            printf("%d\n",env);
+            usleep(150000);
             while(atoi(buffer)!=-1){ //attente d'ack (ACK)
                 read(sock,buffer,sizeof(buffer));
                 sleep(1);
@@ -218,8 +247,10 @@ void game(int joueur,int mode,int sock){ //le mode correspond au joueur à qui c
         
         case 2: // le joueur attend pour jouer 
             printf("En attente de l'autre joueur\n");
-            read(sock,buffer,sizeof(buffer)); //lecture de la colonne joué par l'autre joueur
+            usleep(150000);
+            recv(sock,buffer,sizeof(buffer),0); //lecture de la colonne joué par l'autre joueur 
             colonne=atoi(buffer);
+            printf("col recu : %d\n",colonne);
             write(sock,ACK,sizeof(ACK)+1); // envoie ACK
             
             ligne=remplissage[colonne]; // calcul de la ligne
