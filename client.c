@@ -205,31 +205,29 @@ void game(int joueur,int mode,int sock){ //le mode correspond au joueur à qui c
             switch (colonne)
             {
             case 0:
-                write(sock,Col0,sizeof(env)+1);
+                write(sock,Col0,sizeof(Col0)+1);
                 break;
             case 1:
-                write(sock,Col1,sizeof(env)+1);
+                write(sock,Col1,sizeof(Col1)+1);
                 break;
             case 2:
-                write(sock,Col2,sizeof(env)+1);
+                write(sock,Col2,sizeof(Col2)+1);
                 break;
             case 3:
-                write(sock,Col3,sizeof(env)+1);
+                write(sock,Col3,sizeof(Col3)+1);
                 break;
             case 4:
-                write(sock,Col4,sizeof(env)+1);
+                write(sock,Col4,sizeof(Col4)+1);
                 break;
             case 5:
-                write(sock,Col5,sizeof(env)+1);
+                write(sock,Col5,sizeof(Col5)+1);
                 break;
             case 6:
-                write(sock,Col6,sizeof(env)+1);
+                write(sock,Col6,sizeof(Col6)+1);
                 break;
             }
             
              // pour faciliter l'envoie, on ne communique que la colonne et l'autre joueur calcul la ligne
-            printf("%d\n",env);
-            usleep(150000);
             while(atoi(buffer)!=-1){ //attente d'ack (ACK)
                 read(sock,buffer,sizeof(buffer));
                 sleep(1);
@@ -247,10 +245,8 @@ void game(int joueur,int mode,int sock){ //le mode correspond au joueur à qui c
         
         case 2: // le joueur attend pour jouer 
             printf("En attente de l'autre joueur\n");
-            usleep(150000);
             recv(sock,buffer,sizeof(buffer),0); //lecture de la colonne joué par l'autre joueur 
             colonne=atoi(buffer);
-            printf("col recu : %d\n",colonne);
             write(sock,ACK,sizeof(ACK)+1); // envoie ACK
             
             ligne=remplissage[colonne]; // calcul de la ligne
@@ -352,7 +348,7 @@ printf("Vous voulez mettre votre jeton  dans  la colonne %d\n",choixC);
  */
 int jouable(int x) //permet de verifier si une colonne est jouable
 {
-	if(x>0 &&(x<7)&&remplissage[x]>=0 && remplissage[x]<6)
+	if(x>=0 &&(x<7)&&remplissage[x]>=0 && remplissage[x]<6)
     {
     
     return 1;
