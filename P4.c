@@ -145,34 +145,7 @@ int calculNBJetons(int c,int l, int dirV, int dirH)
  * 
  * *			
  */
-void creationTableau()
-{
-	int i, j;
-	for(i=1;i<6;i++)
-    {
-        printf("\t\t\t");
-        printf("+-+-+-+-+-+-+-+");
 
-        printf("\n");
-        printf("\t\t\t");
-        for (j=0;j<7;j++)
-
-        printf("|%c",tab[5-i][j]);
-
-        printf("|%d \n",i);// affiche les numéros horizontalement
-
-   }
-    if (i==6)
-        printf("\t\t\t");
-    printf("+-+-+-+-+-+-+-+");
-    printf("\n");
-    printf("\t\t\t");
-    for(j=0;j<=6;j++)
-    {
-        printf(" %d",j);// affiche les numéro verticalement
-    }
-    printf("\n\n\t\t");
-}
 
 /**
  *  \file       P4.c --> fonction grillePleine

@@ -26,7 +26,7 @@ Pour ce projet nous utiliserons le langage C
 ## Déroulement d’une partie :
 le plateau est constitué de 7 colonnes et de 5 lignes
 chaque joueur, à tour dans rôle choisi une colonne dans laquelle mettre un jeton qui se place à l’endroit le plus bas disponible.
-Un joueur gagne la partie s’il possède 4 jetons alignés (diagonals incluses).
+Un joueur gagne la partie s’il possède 4 jetons alignés (diagonales incluses).
 
 ## Serveur :
 Le serveur doit d’abord attendre la connection de deux joueurs pour les mettre en communication, il désigne un ’host’ et un ‘client’ à qui il transmet l’ip de l’host

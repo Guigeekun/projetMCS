@@ -22,6 +22,55 @@ void com(int,struct sockaddr_in,int,struct sockaddr_in );
 
 //***********************************************************************************************************************************************************
 
+
+
+/**
+ *  \fn void com(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2)
+ *  \brief    Définie le mode des deux clients, leur envoie les infos de connexion client -> host
+ * 
+ *  \remark     OK est fixé à "1", Ok2 à "2" et ACK à "-1", voir shared.h
+ * 
+ *  \remark     Le port de l'host n'est pas libre, il est fixé à PORT_SVC+1
+ * 
+ *  \version    1.0
+ * 
+ * 		
+ */
+
+void com(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2) {
+        char reponse[MAX_BUFF];
+        
+        printf("debut communication\n");
+
+        CHECK(write(sd, OK, strlen(OK)+1), "Can't write"); //notifie au joueur 1 qu'il est en mode serveur (1)
+        CHECK(write(sd2, OK2, strlen(OK2)+1), "Can't write"); //notifie au joueur 2 qu'il est en mode client (2)
+
+        read(sd2,reponse,sizeof(reponse));
+        while(atoi(reponse)!=1){ //attente d'ack (OK) du client
+                read(sd2,reponse,sizeof(reponse));
+                sleep(1);
+        }
+        char addr[INET_ADDRSTRLEN];
+        inet_ntop(AF_INET, &clt.sin_addr, addr, INET_ADDRSTRLEN);
+        write(sd2,addr,sizeof(addr)+1); //envoie de l'addr du serv au client
+        printf("envoie addr\n");
+
+        read(sd2,reponse,sizeof(reponse));
+        while(atoi(reponse)!=-1){ //attente d'ack (ACK) du client
+                read(sd2,reponse,sizeof(reponse));
+                 printf("waiting for ack\n");
+                sleep(1);
+        }
+
+  //      int port;
+  //      port = ntohs(clt.sin_port);
+  //      write(sd2,port,sizeof(port)+1); //envoie du port du serv au client
+  //      printf("envoie port\n");
+
+         printf("Job done, peut acceuillir d'autres clients\n\n");
+}
+
+
 int main() {
         int se ,sd,sd2;
         pid_t pid;
@@ -57,48 +106,4 @@ int main() {
         shutdown(se,2);
         return 0;
 }
-/**
- *  \file       server.c --> fonction com
- *  \brief    Définie le mode des deux clients, leur envoie les infos de connexion client -> host
- * 
- *  \remark     OK est fixé à "1", Ok2 à "2" et ACK à "-1", voir shared.h
- * 
- *  \remark     Le port de l'host n'est pas libre, il est fixé à PORT_SVC+1
- * 
- *  \version    1.0
- * 
- * *			
- */
 
-void com(int sd, struct sockaddr_in clt,int sd2, struct sockaddr_in clt2) {
-        char reponse[MAX_BUFF];
-        
-        printf("debut communication\n");
-
-        CHECK(write(sd, OK, strlen(OK)+1), "Can't write"); //notifie au joueur 1 qu'il est en mode serveur (1)
-        CHECK(write(sd2, OK2, strlen(OK2)+1), "Can't write"); //notifie au joueur 2 qu'il est en mode client (2)
-
-        read(sd2,reponse,sizeof(reponse));
-        while(atoi(reponse)!=1){ //attente d'ack (OK) du client
-                read(sd2,reponse,sizeof(reponse));
-                sleep(1);
-        }
-        char addr[INET_ADDRSTRLEN];
-        inet_ntop(AF_INET, &clt.sin_addr, addr, INET_ADDRSTRLEN);
-        write(sd2,addr,sizeof(addr)+1); //envoie de l'addr du serv au client
-        printf("envoie addr\n");
-
-        read(sd2,reponse,sizeof(reponse));
-        while(atoi(reponse)!=-1){ //attente d'ack (ACK) du client
-                read(sd2,reponse,sizeof(reponse));
-                 printf("waiting for ack\n");
-                sleep(1);
-        }
-
-  //      int port;
-  //      port = ntohs(clt.sin_port);
-  //      write(sd2,port,sizeof(port)+1); //envoie du port du serv au client
-  //      printf("envoie port\n");
-
-         printf("Job done, peut acceuillir d'autres clients\n\n");
-}
