@@ -232,7 +232,7 @@ void game(int joueur,int mode,int sock){ //le mode correspond au joueur à qui c
                 read(sock,buffer,sizeof(buffer));
                 sleep(1);
         }   
-            printf("ACK completed\n");
+           
             if(partieGagnante(colonne,ligne)){
                 printf("Gagné\n");
                 while(1);
