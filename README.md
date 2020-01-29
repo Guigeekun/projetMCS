@@ -12,7 +12,11 @@ L'adresse est modifiable via INADDR_SVC dans shared.h, fixé à 127.0.0.1 par de
 ## Doxygen :
 Ce projet utilise Doxygen http://www.doxygen.nl/
 Utilisez        `doxygen configdox` pour générer la doc.
+<<<<<<< HEAD:README.md
 Si Doxygen n'est pas installé, utilisez`sudo apt-get install doxygen`
+=======
+Si Doxygen n'est pas installé, utilisez      `sudo apt-get install doxygen`
+>>>>>>> master:README.txt
 
 ## Langage :
 Pour ce projet nous utiliserons le langage C

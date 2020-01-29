@@ -510,13 +510,3 @@ int main(int c, char* v[] ) { // Initialise la connexion au serveur de matchmaki
     // Dialogue avec le serveur
     com(sa,svc);
 }
-
-
-
-
-
-
-
-
-
-
