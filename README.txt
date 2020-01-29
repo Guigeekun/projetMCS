@@ -1,11 +1,11 @@
 
 # Usage :
 Compilez les sources :
-        `gcc client.c -o client`
-        `gcc server.c -o server`
+        `make`
         `./server`
         `./client {ip address (ex:127.0.0.1)} {port}`
         `./client {ip address (ex:127.0.0.1)} {port}`
+
 Le port est modifiable via PORT_SVC dans shared.h, fixé à 7000 par defaut
 Le port PORT_SVC+1 sera utilisé par l'host
 L'adresse est modifiable via INADDR_SVC dans shared.h, fixé à 127.0.0.1 par defaut
