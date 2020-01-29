@@ -2,12 +2,12 @@
 Compilez les sources :
         `make`
 
-        `./svc`
+        ./svc
 
-        `./clt {ip address (ex:127.0.0.1)} {port}`
+        ./clt {ip address (ex:127.0.0.1)} {port}
 
-        `./clt {ip address (ex:127.0.0.1)} {port}`
-        
+        ./clt {ip address (ex:127.0.0.1)} {port}
+
 
 Le port est modifiable via PORT_SVC dans shared.h, fixé à 7000 par defaut
 Le port PORT_SVC+1 sera utilisé par l'host
@@ -40,6 +40,6 @@ les deux joueurs affichent le plateau, le joueur désigné comme ‘Host’ joue
 Une fois la partie terminée ‘l’Host ‘ ferme la socket d’écoute et le client quitte l’application!;
 
 ## Note : 
-        dans la doc server.c sera nommé le serveur de matchmaking
-        le premier client connecté sera nommé l'host
-        le second client sera nommé le client
+dans la doc server.c sera nommé le serveur de matchmaking
+le premier client connecté sera nommé l'host
+le second client sera nommé le client
