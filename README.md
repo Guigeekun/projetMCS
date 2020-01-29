@@ -1,9 +1,13 @@
 # Usage :
 Compilez les sources :
         `make`
+
         `./svc`
+
         `./clt {ip address (ex:127.0.0.1)} {port}`
+
         `./clt {ip address (ex:127.0.0.1)} {port}`
+        
 
 Le port est modifiable via PORT_SVC dans shared.h, fixé à 7000 par defaut
 Le port PORT_SVC+1 sera utilisé par l'host
