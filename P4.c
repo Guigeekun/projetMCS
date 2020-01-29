@@ -181,7 +181,7 @@ int grillePleine()
 
 int jouable(int x)
 {
-	if(x>0 &&(x<7)&&remplissage[x]>=0 && remplissage[x]<6)
+	if(x>=0 &&(x<7)&&remplissage[x]>=0 && remplissage[x]<6)
     {
     
     return 1;
@@ -281,7 +281,7 @@ int main()
 		 printf("Valeur remplissage %d: %d\n",j,remplissage[j]);
 	}
         
-    }while((!grillePleine() && !partieGagnante(colonne,ligne)));
+    }while((grillePleine() && !partieGagnante(colonne,ligne)));
     
 	printf("Fin du game!");
 }
